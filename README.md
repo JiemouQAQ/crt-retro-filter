@@ -1,4 +1,5 @@
 # CRT Retro Filter for Aseprite
+
 <img width="1280" height="640" alt="0803a-export" src="https://github.com/user-attachments/assets/33e2ee76-b295-4877-8007-48463ac59aab" />
 
 > [中文文档](README_CN.md)
@@ -8,6 +9,21 @@ Render your pixel art through the lens of a classic CRT display. 12 independent 
 <p align="center">
   <strong>12 Filters · 5 Tabs · 9 Presets · Real-time Preview · Single Undo</strong>
 </p>
+
+## Table of Contents
+
+- [Features](#features)
+- [Showcase](#showcase)
+- [Installation](#installation)
+- [Usage](#usage)
+- [Filter Reference](#filter-reference)
+- [Presets](#presets)
+- [Custom Presets](#custom-presets)
+- [Filter Chain Order](#filter-chain-order)
+- [FAQ](#faq)
+- [Requirements](#requirements)
+- [File Structure](#file-structure)
+- [License](#license)
 
 ## Features
 
@@ -20,6 +36,36 @@ Render your pixel art through the lens of a classic CRT display. 12 independent 
 - **Bilingual** — Full English and Chinese (中文) interface, switchable in the dialog
 - **Quick Apply** — Re-apply last saved settings without opening the dialog
 - **Keyboard Shortcut** — Bind a hotkey to the Randomize command for rapid experimentation
+
+## Showcase
+
+> 📷 **Placeholder note**: The images below are placeholders. To add real screenshots, simply overwrite the files with the same names under `assets/` — no README changes needed.
+
+### Original
+
+<p align="center">
+  <img src="assets/showcase/original.png" alt="Original (placeholder)" width="360">
+</p>
+
+### Preset Gallery
+
+| Classic Arcade | 80s Computer | Broadcast TV |
+| --- | --- | --- |
+| <img src="assets/showcase/preset-classic-arcade.png" alt="Classic Arcade" width="240"> | <img src="assets/showcase/preset-80s-computer.png" alt="80s Computer" width="240"> | <img src="assets/showcase/preset-broadcast-tv.png" alt="Broadcast TV" width="240"> |
+
+| Subtle Retro | CRT Monitor | VHS Tape |
+| --- | --- | --- |
+| <img src="assets/showcase/preset-subtle-retro.png" alt="Subtle Retro" width="240"> | <img src="assets/showcase/preset-crt-monitor.png" alt="CRT Monitor" width="240"> | <img src="assets/showcase/preset-vhs-tape.png" alt="VHS Tape" width="240"> |
+
+| Trinitron | Pixel Perfect | Heavy Glitch |
+| --- | --- | --- |
+| <img src="assets/showcase/preset-trinitron.png" alt="Trinitron" width="240"> | <img src="assets/showcase/preset-pixel-perfect.png" alt="Pixel Perfect" width="240"> | <img src="assets/showcase/preset-heavy-glitch.png" alt="Heavy Glitch" width="240"> |
+
+### Plugin Dialog
+
+<p align="center">
+  <img src="assets/dialog.png" alt="Plugin dialog (placeholder)" width="480">
+</p>
 
 ## Installation
 
@@ -199,6 +245,45 @@ Color Temperature → Noise
 
 This order mirrors the real CRT imaging pipeline: resolution reduction first, then geometry distortion, signal artifacts, phosphor patterns, bloom, screen properties, and finally noise overlay.
 
+## FAQ
+
+### Why am I asked to convert to RGB color mode first?
+
+The per-pixel filter math works on RGB channels; **Indexed** and **Grayscale** modes cannot render correctly. Convert via **Image → Color Mode → RGB** before applying.
+
+### The preview feels laggy. What can I do?
+
+The preview is computed on canvas in real time, so large sprites cost more. Try:
+
+- Working on a smaller canvas or a small test region
+- Turning off the **Enable** toggle for filters you don't need
+- Lowering the intensity of expensive filters such as Noise or Bloom
+- Closing the dialog after tweaking and applying the final result
+
+### How do I undo after applying?
+
+All changes are grouped into a **single** undo step when you click **Apply** — press `Ctrl+Z` (`Cmd+Z` on macOS) to revert everything at once.
+
+### How do I bind a shortcut to Randomize?
+
+Open **Edit → Keyboard Shortcuts**, search for **CRT Retro Filter**, and assign a shortcut to the **Randomize** command (e.g., `Ctrl+Shift+R`). All script command shortcuts live in **Edit → Keyboard Shortcuts**.
+
+### Where are my custom presets stored?
+
+Custom presets are persisted via `plugin.preferences` in Aseprite's user config directory and survive restarts. Uninstalling the extension does not remove them.
+
+### Which Aseprite version is required?
+
+**Aseprite v1.3.0 or later** (v1.3.11+ recommended). Older versions may lack required APIs.
+
+### Is this a physically accurate CRT simulation?
+
+No — it is an **artistic** CRT simulation tuned for a good-looking retro look, not a per-phosphor physics model. Parameters are tuned so you can get a nice picture quickly.
+
+### Found a bug or have an idea?
+
+Open an issue at [GitHub Issues](https://github.com/JiemouQAQ/crt-retro-filter/issues) with your Aseprite version, OS, and reproduction steps.
+
 ## Requirements
 
 - **Aseprite v1.3.0** or later (v1.3.11+ recommended)
@@ -231,6 +316,8 @@ crt-retro-filter/
     ├── lang.lua              # Bilingual EN/ZH strings
     └── math.lua              # Gaussian kernel, interpolation, fast hash
 ```
+
+> The `assets/` folder at the repository root only holds README showcase images (including placeholders); it is not part of the extension itself.
 
 ## License
 

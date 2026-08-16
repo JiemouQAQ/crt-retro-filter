@@ -1,4 +1,5 @@
 # CRT 复古滤镜 for Aseprite
+
 <img width="1280" height="640" alt="0803a-export" src="https://github.com/user-attachments/assets/33e2ee76-b295-4877-8007-48463ac59aab" />
 
 > [English Documentation](README.md)
@@ -8,6 +9,21 @@
 <p align="center">
   <strong>12 个滤镜 · 5 个标签页 · 9 套预设 · 实时预览 · 一键撤销</strong>
 </p>
+
+## 目录
+
+- [功能特性](#功能特性)
+- [效果展示](#效果展示)
+- [安装](#安装)
+- [使用说明](#使用说明)
+- [滤镜参数说明](#滤镜参数说明)
+- [预设一览](#预设一览)
+- [自定义预设](#自定义预设)
+- [滤镜链顺序](#滤镜链顺序)
+- [FAQ 常见问题](#faq-常见问题)
+- [系统要求](#系统要求)
+- [文件结构](#文件结构)
+- [许可证](#许可证)
 
 ## 功能特性
 
@@ -20,6 +36,36 @@
 - **中英双语** — 完整的中英文界面，可在对话框中随时切换
 - **快速应用** — 无需打开对话框，直接用上次保存的参数应用滤镜
 - **快捷键绑定** — 可为随机生成绑定快捷键，快速实验不同效果
+
+## 效果展示
+
+> 📷 **占位图说明**：以下图片为占位图，替换为真实效果截图时只需覆盖 `assets/` 目录下同名文件，无需修改 README。
+
+### 原图
+
+<p align="center">
+  <img src="assets/showcase/original.png" alt="原图（占位）" width="360">
+</p>
+
+### 九套预设效果
+
+| 经典街机 | 80 年代电脑 | 老式电视 |
+| --- | --- | --- |
+| <img src="assets/showcase/preset-classic-arcade.png" alt="经典街机" width="240"> | <img src="assets/showcase/preset-80s-computer.png" alt="80 年代电脑" width="240"> | <img src="assets/showcase/preset-broadcast-tv.png" alt="老式电视" width="240"> |
+
+| 轻复古 | CRT 显示器 | VHS 录像带 |
+| --- | --- | --- |
+| <img src="assets/showcase/preset-subtle-retro.png" alt="轻复古" width="240"> | <img src="assets/showcase/preset-crt-monitor.png" alt="CRT 显示器" width="240"> | <img src="assets/showcase/preset-vhs-tape.png" alt="VHS 录像带" width="240"> |
+
+| 特丽珑 | 像素完美 | 重度故障 |
+| --- | --- | --- |
+| <img src="assets/showcase/preset-trinitron.png" alt="特丽珑" width="240"> | <img src="assets/showcase/preset-pixel-perfect.png" alt="像素完美" width="240"> | <img src="assets/showcase/preset-heavy-glitch.png" alt="重度故障" width="240"> |
+
+### 插件界面
+
+<p align="center">
+  <img src="assets/dialog.png" alt="插件对话框（占位）" width="480">
+</p>
 
 ## 安装
 
@@ -199,6 +245,45 @@
 
 此顺序模拟真实 CRT 成像管线：先降低分辨率，再进行几何变形，叠加信号伪影，绘制荧光粉图案，添加辉光，最后叠加屏幕物理属性和噪声。
 
+## FAQ 常见问题
+
+### 为什么提示要先转换为 RGB 颜色模式？
+
+滤镜的逐像素运算基于 RGB 通道，**索引色（Indexed）**和**灰度（Grayscale）**模式无法正确渲染。请通过 **图像 → 颜色模式 → RGB** 转换后再使用。
+
+### 预览时画面卡顿怎么办？
+
+预览基于画布实时运算，大尺寸画布下性能消耗较大。可以尝试：
+
+- 在较小的画布或测试区域上调整参数
+- 关闭不需要的滤镜的 **启用** 开关
+- 降低噪点、辉光等较耗时滤镜的强度
+- 调整完成后关闭对话框，再应用最终效果
+
+### 应用后如何撤销？
+
+点击 **应用** 后，所有修改会合并为**一个**撤销步骤，直接按 `Ctrl+Z`（macOS 为 `Cmd+Z`）即可整体回退。
+
+### 如何给“随机生成”绑定快捷键？
+
+在 **编辑 → 键盘快捷键** 中搜索 **CRT Retro Filter**，为 **Randomize** 命令绑定快捷键（例如 `Ctrl+Shift+R`）。所有脚本命令的快捷键都在 **编辑 → 键盘快捷键** 中管理。
+
+### 自定义预设保存在哪里？
+
+自定义预设通过 `plugin.preferences` 持久化，存放在 Aseprite 的用户配置目录中，重启后依然保留，卸载扩展也不会丢失。
+
+### 插件支持哪个版本的 Aseprite？
+
+需要 **Aseprite v1.3.0 或更高版本**（推荐 v1.3.11+），低版本可能缺少部分 API。
+
+### 这是物理精确的 CRT 模拟吗？
+
+不是。本插件追求复古**观感**而非物理精确，是艺术化的 CRT 模拟。每个滤镜的参数都经过调整，方便你快速获得好看的画面，而不是复现某台特定显示器。
+
+### 遇到问题或想提建议？
+
+欢迎在 [GitHub Issues](https://github.com/JiemouQAQ/crt-retro-filter/issues) 反馈，附上 Aseprite 版本、操作系统和复现步骤即可。
+
 ## 系统要求
 
 - **Aseprite v1.3.0** 或更高版本（推荐 v1.3.11+）
@@ -231,6 +316,8 @@ crt-retro-filter/
     ├── lang.lua              # 中英双语字符串
     └── math.lua              # 高斯核、插值、快速哈希
 ```
+
+> 仓库根目录的 `assets/` 文件夹仅存放 README 展示图片（含占位图），不属于扩展包本身。
 
 ## 许可证
 
