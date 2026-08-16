@@ -36,6 +36,7 @@ Render your pixel art through the lens of a classic CRT display. 12 independent 
 - **Randomize** — Generate random filter configurations with one click, all controls update visually
 - **Duplicate Layer Option** — Optionally apply filters to a new layer, preserving the original
 - **Selection Support** — Apply filters to the selected area only, leaving pixels outside untouched
+- **Apply to All Frames** — Process every frame of the active layer in one click, grouped into a single undo step
 - **Bilingual** — Full English and Chinese (中文) interface, switchable in the dialog
 - **Quick Apply** — Re-apply last saved settings without opening the dialog
 - **Keyboard Shortcut** — Bind a hotkey to the Randomize command for rapid experimentation
@@ -98,7 +99,7 @@ The dialog is organized into five tabs:
 
 | Tab | Contents |
 |-----|----------|
-| **Presets** | Preset selection, preset strength, language switch, duplicate layer option, selection-only option, custom preset management, Randomize button |
+| **Presets** | Preset selection, preset strength, language switch, duplicate layer option, selection-only option, apply-to-all-frames option, custom preset management, Randomize button |
 | **Screen** | Scanlines, Screen Curvature, Chromatic Aberration |
 | **Display** | Bloom / Glow, Vignette, Noise / Static |
 | **Pixel** | Color Temperature, Pixelation, RGB Phosphor Mask |
@@ -134,6 +135,12 @@ Check **"Duplicate Layer Before Apply"** in the Presets tab to apply filters to 
 Check **"Selection Only"** in the Presets tab to apply filters only to the pixels inside the active selection; pixels outside stay untouched. The preview reflects the masked result too.
 
 If no selection is active when checked, an alert is shown when you click **Apply**.
+
+### Apply to All Frames
+
+Check **"Apply to All Frames"** to run the filter chain on **every frame** of the active layer (for animations), all grouped into a **single** undo step.
+
+Pair it with **Fixed Noise** in the Noise tab to keep the noise pattern identical across frames and avoid flicker while playing the animation.
 
 ## Filter Reference
 

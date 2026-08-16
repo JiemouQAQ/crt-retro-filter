@@ -23,6 +23,9 @@ local ColorUtils = require("utils.color")
 
 local DialogUI = {}
 
+-- Displayed in the dialog title; keep in sync with package.json
+local PLUGIN_VERSION = "3.4.0"
+
 -- ============================================================
 -- Preview state
 -- ============================================================
@@ -274,7 +277,8 @@ local function applyPresetToDialog(dlg, preset_params, params, T)
     elseif type(v) == "boolean" then
       pcall(function() dlg:modify{ id = k, selected = v } end)
     else
-      pcall(function() dlg:modify{ id = k, text = tostring(v) } end)
+      -- numeric params back the slider widgets
+      pcall(function() dlg:modify{ id = k, value = v } end)
     end
   end
 end
@@ -465,7 +469,7 @@ function DialogUI.show(plugin)
   local canvasW = originalPreview.width + margin * 2
   local canvasH = originalPreview.height + margin * 2
 
-  local dlg = Dialog(T.dialog_title)
+  local dlg = Dialog(T.dialog_title .. "  v" .. PLUGIN_VERSION)
 
   -- ===== Preview canvas (top, always visible) =====
   -- Before/After compare state: the checkbox locks the original view,
@@ -617,6 +621,7 @@ function DialogUI.show(plugin)
       updatePreview()
     end
   }
+  dlg:check{ id = "all_frames", label = T.all_frames, selected = prefs.all_frames or false }
 
   dlg:button{ id = "disable_all", text = T.disable_all_btn, hexpand = false,
     onclick = function()
@@ -900,7 +905,7 @@ function DialogUI.show(plugin)
         elseif type(v) == "boolean" then
           pcall(function() dlg:modify{ id = k, selected = v } end)
         else
-          pcall(function() dlg:modify{ id = k, text = tostring(v) } end)
+          pcall(function() dlg:modify{ id = k, value = v } end)
         end
       end
 
@@ -923,9 +928,10 @@ function DialogUI.show(plugin)
     prefs.params = params
     prefs.dup_layer = data.dup_layer
     prefs.sel_only = data.sel_only
+    prefs.all_frames = data.all_frames
 
     local sprite = app.activeSprite
-    DialogUI.applyToActiveLayer(sprite, params, T, data.dup_layer, data.sel_only)
+    DialogUI.applyToActiveLayer(sprite, params, T, data.dup_layer, data.sel_only, data.all_frames)
   end
 
   originalPreview = nil
@@ -956,7 +962,7 @@ end
 -- ============================================================
 -- Apply filter to the active layer only
 -- ============================================================
-function DialogUI.applyToActiveLayer(sprite, params, T, duplicate, selectionOnly)
+function DialogUI.applyToActiveLayer(sprite, params, T, duplicate, selectionOnly, allFrames)
   if not sprite then return end
 
   local layer = app.activeLayer
@@ -992,22 +998,42 @@ function DialogUI.applyToActiveLayer(sprite, params, T, duplicate, selectionOnly
     end
   end
 
+  -- Frame list: every frame of the layer, or just the active one
+  local frameList = {}
+  if allFrames then
+    for f = 1, #sprite.frames do
+      frameList[#frameList + 1] = f
+    end
+  else
+    frameList[1] = cel.frame.frameNumber
+  end
+
   app.transaction(T.txn_single, function()
     if duplicate then
       local newLayer = sprite:newLayer()
       newLayer.name = layer.name .. " CRT"
-      local newCel = sprite:newCel(newLayer, cel.frame)
-      newCel.image = cel.image:clone()
-      newCel.position = cel.position
-      local img = newCel.image:clone()
-      img = DialogUI.applyFilters(img, params)
-      if selection then img = DialogUI.maskToSelection(img, cel.image, selection, newCel.position) end
-      newCel.image = img
+      for _, f in ipairs(frameList) do
+        local srcCel = layer:cel(f)
+        if srcCel then
+          local newCel = sprite:newCel(newLayer, f)
+          newCel.image = srcCel.image:clone()
+          newCel.position = srcCel.position
+          local img = newCel.image:clone()
+          img = DialogUI.applyFilters(img, params)
+          if selection then img = DialogUI.maskToSelection(img, srcCel.image, selection, newCel.position) end
+          newCel.image = img
+        end
+      end
     else
-      local img = cel.image:clone()
-      img = DialogUI.applyFilters(img, params)
-      if selection then img = DialogUI.maskToSelection(img, cel.image, selection, cel.position) end
-      cel.image = img
+      for _, f in ipairs(frameList) do
+        local celF = layer:cel(f)
+        if celF then
+          local img = celF.image:clone()
+          img = DialogUI.applyFilters(img, params)
+          if selection then img = DialogUI.maskToSelection(img, celF.image, selection, celF.position) end
+          celF.image = img
+        end
+      end
     end
   end)
 

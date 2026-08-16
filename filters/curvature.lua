@@ -51,7 +51,7 @@ end
 -- Returns a new image (does NOT modify the original)
 -- params:
 --   curvature_amount: -100 (concave/pincushion) to 100 (convex/barrel)
---   curvature_corner_radius: 0-50, rounded corner radius in pixels
+--   curvature_corner_radius: 0-100, rounded corner radius in pixels
 function Curvature.apply(image, params)
   local curvature = params.curvature_amount or 30
   local corner_radius = params.curvature_corner_radius or 0

@@ -58,7 +58,7 @@ function init(plugin)
         return
       end
 
-      DialogUI.applyToActiveLayer(app.activeSprite, prefs.params, T, prefs.dup_layer or false, prefs.sel_only or false)
+      DialogUI.applyToActiveLayer(app.activeSprite, prefs.params, T, prefs.dup_layer or false, prefs.sel_only or false, prefs.all_frames or false)
     end
   }
 
@@ -84,7 +84,7 @@ function init(plugin)
       params.global_strength = (savedParams and savedParams.global_strength) or 100
 
       app.transaction("CRT Randomize", function()
-        DialogUI.applyToActiveLayer(app.activeSprite, params, T, false, prefs.sel_only or false)
+        DialogUI.applyToActiveLayer(app.activeSprite, params, T, false, prefs.sel_only or false, prefs.all_frames or false)
       end)
       app.refresh()
     end
