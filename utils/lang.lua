@@ -35,6 +35,8 @@ local strings = {
     custom_presets = "Custom Presets",
     no_custom_presets = "No custom presets saved.",
     dup_layer = "Duplicate Layer Before Apply",
+    compare_orig = "Compare Original",
+    compare_hint = "Hold the preview with the left mouse button to peek at the original",
 
     -- Preset descriptions
     preset_arcade_name = "Classic Arcade",
@@ -87,6 +89,7 @@ local strings = {
     sep_noise = "Noise / Static",
     grain = "Grain:",
     monochrome = "Monochrome:",
+    noise_fixed = "Fixed Noise:",
 
     -- Pixel tab
     sep_color_temp = "Color Temperature",
@@ -152,6 +155,8 @@ local strings = {
     custom_presets = "自定义预设",
     no_custom_presets = "暂无自定义预设。",
     dup_layer = "复制图层再应用",
+    compare_orig = "对比原图",
+    compare_hint = "按住预览画布（鼠标左键）可临时查看原图",
 
     -- Preset descriptions
     preset_arcade_name = "经典街机",
@@ -204,6 +209,7 @@ local strings = {
     sep_noise = "噪点",
     grain = "颗粒:",
     monochrome = "单色:",
+    noise_fixed = "固定噪点:",
 
     -- Pixel tab
     sep_color_temp = "色温",

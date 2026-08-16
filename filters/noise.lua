@@ -15,17 +15,25 @@ local Noise = {}
 --   intensity: 0-100, noise strength
 --   grain_size: 1-4, noise grain size in pixels
 --   monochrome: true/false, whether noise is luminance-only
+--   fixed: true/false, use a constant seed so repeated applies
+--         produce the same pattern (useful for animations)
 function Noise.apply(image, params)
   local intensity = params.noise_intensity or 20
-  local grain_size = params.grain_size or 1
+  local grain_size = params.noise_grain_size or 1
   local monochrome = params.noise_monochrome
   local enabled = params.noise_enabled
 
   if enabled == false or intensity == 0 then return end
 
   local noise_level = intensity / 100.0 * 255.0
-  -- Frame-based seed for temporal variation
-  local frameSeed = os.time() % 10007
+  -- Frame-based seed for temporal variation; a constant seed when
+  -- "fixed noise" is enabled keeps the pattern stable across frames.
+  local frameSeed
+  if params.noise_fixed then
+    frameSeed = 12345
+  else
+    frameSeed = os.time() % 10007
+  end
 
   for it in image:pixels() do
     local gx = math.floor(it.x / grain_size)

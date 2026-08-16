@@ -17,9 +17,9 @@ local Aberration = {}
 --   shift_b: -5 to 5, blue channel radial shift in pixels
 --   falloff: 0-100, how the shift increases from center to edge
 function Aberration.apply(image, params)
-  local shift_r = params.shift_r or 2
-  local shift_b = params.shift_b or -2
-  local falloff = params.falloff or 50
+  local shift_r = params.aberration_shift_r or 2
+  local shift_b = params.aberration_shift_b or -2
+  local falloff = params.aberration_falloff or 50
   local enabled = params.aberration_enabled
 
   if enabled == false or (shift_r == 0 and shift_b == 0) then return end

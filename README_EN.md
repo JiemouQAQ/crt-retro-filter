@@ -29,6 +29,7 @@ Render your pixel art through the lens of a classic CRT display. 12 independent 
 
 - **12 CRT Filters** — Scanlines, Screen Curvature (convex/concave), Chromatic Aberration, Phosphor Bloom, Vignette, Signal Noise, Color Temperature, Pixelation, RGB Phosphor Mask, Horizontal Ripple, Interlacing Jitter, Phosphor Persistence
 - **Real-time Preview** — See changes instantly as you adjust parameters, powered by an on-canvas preview with change detection for performance
+- **Before/After Compare** — Toggle or hold the preview canvas to switch between the filtered result and the original
 - **9 Built-in Presets** — Classic Arcade, 80s Computer, Broadcast TV, Subtle Retro, CRT Monitor, VHS Tape, Trinitron, Pixel Perfect, Heavy Glitch
 - **Custom Presets** — Save, load, and delete your own parameter combinations
 - **Randomize** — Generate random filter configurations with one click, all controls update visually
@@ -103,6 +104,15 @@ The dialog is organized into five tabs:
 
 Each filter has an independent **Enable** toggle. Click **Apply** to commit — all changes are grouped into a single undo step (`Ctrl+Z`).
 
+### Before/After Compare
+
+The preview canvas supports two compare modes:
+
+- **Hold to compare**: press and **hold the left mouse button** on the preview canvas to temporarily show the original; release to return to the filtered result
+- **Lock compare**: check **"Compare Original"** below the canvas to keep the original visible until unchecked
+
+While comparing, the preview area is outlined with a green border as a hint.
+
 ### Duplicate Layer
 
 Check **"Duplicate Layer Before Apply"** in the Presets tab to apply filters to a new copy of the active layer, keeping the original untouched. The new layer is named `{original name} CRT`.
@@ -114,7 +124,7 @@ Simulates the horizontal dark lines created by CRT interlaced scanning. Alternat
 
 | Parameter | Range | Description |
 |-----------|-------|-------------|
-| Intensity | 0–100 | Scanline darkness (lower = darker) |
+| Intensity | 0–100 | Scanline darkness (higher = darker) |
 | Thickness | 1–4 | Thickness in pixel rows |
 
 ### Screen Curvature
@@ -160,6 +170,7 @@ Simulates analog signal noise and electrostatic interference.
 | Intensity | 0–100 | Noise strength |
 | Grain Size | 1–4 | Grain size in pixels |
 | Monochrome | on/off | Luminance-only noise (off = per-channel RGB noise) |
+| Fixed Noise | on/off | Use a constant noise pattern (stable when applied per animation frame) |
 
 ### Color Temperature
 Shifts the color balance toward warm (low Kelvin) or cool (high Kelvin) tones.

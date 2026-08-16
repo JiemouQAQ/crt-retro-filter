@@ -10,7 +10,7 @@ local Scanlines = {}
 
 -- Apply scanlines to an image (modifies in-place)
 -- params:
---   intensity: 0-100, how dark the scanlines are (lower = darker)
+--   intensity: 0-100, scanline strength (higher = darker rows)
 --   thickness: 1-4, scanline thickness in pixel rows
 --   offset: 0 or 1, which row set gets darkened
 function Scanlines.apply(image, params)
@@ -21,8 +21,9 @@ function Scanlines.apply(image, params)
 
   if enabled == false then return end
 
-  -- Convert intensity 0-100 to opacity 0.0-1.0 for the darkening
-  local darken = intensity / 100.0
+  -- Convert intensity 0-100 to a darkening factor 1.0..0.15:
+  -- higher intensity = darker scanline rows (never fully black).
+  local darken = 1.0 - (intensity / 100.0) * 0.85
 
   for it in image:pixels() do
     local row = it.y

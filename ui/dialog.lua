@@ -38,7 +38,7 @@ local defaults = {
   aberration_enabled = true, aberration_shift_r = 2, aberration_shift_b = -2, aberration_falloff = 50,
   vignette_enabled = true, vignette_intensity = 40, vignette_radius = 50, vignette_softness = 50, vignette_ratio = "auto",
   bloom_enabled = true, bloom_threshold = 128, bloom_radius = 3, bloom_intensity = 30,
-  noise_enabled = true, noise_intensity = 15, noise_grain_size = 1, noise_monochrome = true,
+  noise_enabled = true, noise_intensity = 15, noise_grain_size = 1, noise_monochrome = true, noise_fixed = false,
   color_temp_enabled = false, color_temp_value = 6500, color_temp_intensity = 50,
   pixelation_enabled = false, pixelation_block_size = 2,
   rgb_mask_enabled = false, rgb_mask_intensity = 30, rgb_mask_type = "grille", rgb_mask_width = 1,
@@ -53,7 +53,7 @@ local paramKeys = {
   "aberration_enabled", "aberration_shift_r", "aberration_shift_b", "aberration_falloff",
   "bloom_enabled", "bloom_threshold", "bloom_radius", "bloom_intensity",
   "vignette_enabled", "vignette_intensity", "vignette_radius", "vignette_softness", "vignette_ratio",
-  "noise_enabled", "noise_intensity", "noise_grain_size", "noise_monochrome",
+  "noise_enabled", "noise_intensity", "noise_grain_size", "noise_monochrome", "noise_fixed",
   "color_temp_enabled", "color_temp_value", "color_temp_intensity",
   "pixelation_enabled", "pixelation_block_size",
   "rgb_mask_enabled", "rgb_mask_intensity", "rgb_mask_type", "rgb_mask_width",
@@ -70,7 +70,7 @@ local presets = {
     name_key = "preset_arcade_name",
     desc_key = "preset_arcade_desc",
     params = {
-      scanlines_enabled = true, scanlines_intensity = 60, scanlines_thickness = 1, scanlines_offset = 0,
+      scanlines_enabled = true, scanlines_intensity = 85, scanlines_thickness = 1, scanlines_offset = 0,
       curvature_enabled = true, curvature_amount = 35, curvature_corner_radius = 8,
       aberration_enabled = false,
       vignette_enabled = true, vignette_intensity = 45, vignette_radius = 55, vignette_softness = 40, vignette_ratio = "auto",
@@ -82,7 +82,7 @@ local presets = {
     name_key = "preset_80s_name",
     desc_key = "preset_80s_desc",
     params = {
-      scanlines_enabled = true, scanlines_intensity = 50, scanlines_thickness = 1, scanlines_offset = 0,
+      scanlines_enabled = true, scanlines_intensity = 55, scanlines_thickness = 1, scanlines_offset = 0,
       curvature_enabled = true, curvature_amount = 20, curvature_corner_radius = 4,
       aberration_enabled = true, aberration_shift_r = 1, aberration_shift_b = -1, aberration_falloff = 40,
       vignette_enabled = true, vignette_intensity = 35, vignette_radius = 50, vignette_softness = 50, vignette_ratio = "auto",
@@ -94,7 +94,7 @@ local presets = {
     name_key = "preset_tv_name",
     desc_key = "preset_tv_desc",
     params = {
-      scanlines_enabled = true, scanlines_intensity = 30, scanlines_thickness = 1, scanlines_offset = 0,
+      scanlines_enabled = true, scanlines_intensity = 60, scanlines_thickness = 1, scanlines_offset = 0,
       curvature_enabled = true, curvature_amount = 50, curvature_corner_radius = 12,
       aberration_enabled = true, aberration_shift_r = 3, aberration_shift_b = -3, aberration_falloff = 60,
       vignette_enabled = true, vignette_intensity = 50, vignette_radius = 40, vignette_softness = 30, vignette_ratio = "auto",
@@ -106,7 +106,7 @@ local presets = {
     name_key = "preset_subtle_name",
     desc_key = "preset_subtle_desc",
     params = {
-      scanlines_enabled = true, scanlines_intensity = 85, scanlines_thickness = 1, scanlines_offset = 0,
+      scanlines_enabled = true, scanlines_intensity = 20, scanlines_thickness = 1, scanlines_offset = 0,
       curvature_enabled = false,
       aberration_enabled = false,
       vignette_enabled = true, vignette_intensity = 15, vignette_radius = 60, vignette_softness = 60, vignette_ratio = "auto",
@@ -118,7 +118,7 @@ local presets = {
     name_key = "preset_monitor_name",
     desc_key = "preset_monitor_desc",
     params = {
-      scanlines_enabled = true, scanlines_intensity = 75, scanlines_thickness = 1, scanlines_offset = 0,
+      scanlines_enabled = true, scanlines_intensity = 45, scanlines_thickness = 1, scanlines_offset = 0,
       curvature_enabled = true, curvature_amount = 15, curvature_corner_radius = 3,
       aberration_enabled = true, aberration_shift_r = 1, aberration_shift_b = -1, aberration_falloff = 30,
       vignette_enabled = true, vignette_intensity = 25, vignette_radius = 55, vignette_softness = 50, vignette_ratio = "auto",
@@ -146,7 +146,7 @@ local presets = {
     name_key = "preset_trinitron_name",
     desc_key = "preset_trinitron_desc",
     params = {
-      scanlines_enabled = true, scanlines_intensity = 55, scanlines_thickness = 1, scanlines_offset = 0,
+      scanlines_enabled = true, scanlines_intensity = 60, scanlines_thickness = 1, scanlines_offset = 0,
       curvature_enabled = true, curvature_amount = 20, curvature_corner_radius = 5,
       aberration_enabled = false,
       vignette_enabled = true, vignette_intensity = 35, vignette_radius = 50, vignette_softness = 45, vignette_ratio = "auto",
@@ -160,7 +160,7 @@ local presets = {
     name_key = "preset_pixel_perfect_name",
     desc_key = "preset_pixel_perfect_desc",
     params = {
-      scanlines_enabled = true, scanlines_intensity = 90, scanlines_thickness = 1, scanlines_offset = 0,
+      scanlines_enabled = true, scanlines_intensity = 15, scanlines_thickness = 1, scanlines_offset = 0,
       curvature_enabled = false,
       aberration_enabled = false,
       vignette_enabled = true, vignette_intensity = 10, vignette_radius = 65, vignette_softness = 70, vignette_ratio = "auto",
@@ -173,7 +173,7 @@ local presets = {
     name_key = "preset_glitch_name",
     desc_key = "preset_glitch_desc",
     params = {
-      scanlines_enabled = true, scanlines_intensity = 40, scanlines_thickness = 2, scanlines_offset = 1,
+      scanlines_enabled = true, scanlines_intensity = 75, scanlines_thickness = 2, scanlines_offset = 1,
       curvature_enabled = true, curvature_amount = 45, curvature_corner_radius = 10,
       aberration_enabled = true, aberration_shift_r = 5, aberration_shift_b = -5, aberration_falloff = 90,
       vignette_enabled = true, vignette_intensity = 55, vignette_radius = 30, vignette_softness = 20, vignette_ratio = "auto",
@@ -419,6 +419,11 @@ function DialogUI.show(plugin)
   local dlg = Dialog(T.dialog_title)
 
   -- ===== Preview canvas (top, always visible) =====
+  -- Before/After compare state: the checkbox locks the original view,
+  -- holding the left mouse button on the canvas peeks at it temporarily.
+  local compareLock = false
+  local compareHold = false
+
   dlg:canvas{
     id = "preview_canvas",
     width = canvasW,
@@ -427,13 +432,40 @@ function DialogUI.show(plugin)
     onpaint = function(ev)
       local gc = ev.context
       gc:fillRect(Rectangle(0, 0, canvasW, canvasH), app.pixelColor.rgba(12, 12, 18, 255))
-      if previewImg then
-        local x = math.floor((canvasW - previewImg.width) / 2)
-        local y = math.floor((canvasH - previewImg.height) / 2)
-        gc:drawImage(previewImg, x, y)
+      local showOriginal = compareLock or compareHold
+      local img = showOriginal and originalPreview or previewImg
+      if img then
+        local x = math.floor((canvasW - img.width) / 2)
+        local y = math.floor((canvasH - img.height) / 2)
+        gc:drawImage(img, x, y)
+        if showOriginal then
+          -- subtle border marks compare mode
+          gc:strokeRect(Rectangle(1, 1, canvasW - 2, canvasH - 2), app.pixelColor.rgba(110, 215, 155, 255))
+        end
+      end
+    end,
+    onmousedown = function(ev)
+      if ev.button == MouseButton.LEFT then
+        compareHold = true
+        dlg:repaint()
+      end
+    end,
+    onmouseup = function(ev)
+      if ev.button == MouseButton.LEFT then
+        compareHold = false
+        dlg:repaint()
       end
     end
   }
+
+  -- Compare controls
+  dlg:check{ id = "compare_orig", label = T.compare_orig, selected = false,
+    onclick = function()
+      compareLock = dlg.data.compare_orig
+      dlg:repaint()
+    end
+  }
+  dlg:label{ text = "  " .. T.compare_hint }
 
   -- ===== Real-time preview update with change detection =====
 	local function updatePreview()
@@ -685,6 +717,8 @@ function DialogUI.show(plugin)
   dlg:slider{ id = "noise_grain_size", label = T.grain, min = 1, max = 4, value = params.noise_grain_size, hexpand = true,
     onchange = function() updatePreview() end }
   dlg:check{ id = "noise_monochrome", label = T.monochrome, selected = params.noise_monochrome,
+    onclick = function() updatePreview() end }
+  dlg:check{ id = "noise_fixed", label = T.noise_fixed, selected = params.noise_fixed,
     onclick = function() updatePreview() end }
 
   -- ===== Tab: Pixel =====
