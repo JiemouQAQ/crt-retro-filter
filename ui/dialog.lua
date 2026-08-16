@@ -36,7 +36,7 @@ local defaults = {
   scanlines_enabled = true, scanlines_intensity = 70, scanlines_thickness = 1, scanlines_offset = 0,
   curvature_enabled = true, curvature_amount = 30, curvature_corner_radius = 0,
   aberration_enabled = true, aberration_shift_r = 2, aberration_shift_b = -2, aberration_falloff = 50,
-  vignette_enabled = true, vignette_intensity = 40, vignette_radius = 50, vignette_softness = 50,
+  vignette_enabled = true, vignette_intensity = 40, vignette_radius = 50, vignette_softness = 50, vignette_ratio = "auto",
   bloom_enabled = true, bloom_threshold = 128, bloom_radius = 3, bloom_intensity = 30,
   noise_enabled = true, noise_intensity = 15, noise_grain_size = 1, noise_monochrome = true,
   color_temp_enabled = false, color_temp_value = 6500, color_temp_intensity = 50,
@@ -52,7 +52,7 @@ local paramKeys = {
   "curvature_enabled", "curvature_amount", "curvature_corner_radius",
   "aberration_enabled", "aberration_shift_r", "aberration_shift_b", "aberration_falloff",
   "bloom_enabled", "bloom_threshold", "bloom_radius", "bloom_intensity",
-  "vignette_enabled", "vignette_intensity", "vignette_radius", "vignette_softness",
+  "vignette_enabled", "vignette_intensity", "vignette_radius", "vignette_softness", "vignette_ratio",
   "noise_enabled", "noise_intensity", "noise_grain_size", "noise_monochrome",
   "color_temp_enabled", "color_temp_value", "color_temp_intensity",
   "pixelation_enabled", "pixelation_block_size",
@@ -73,7 +73,7 @@ local presets = {
       scanlines_enabled = true, scanlines_intensity = 60, scanlines_thickness = 1, scanlines_offset = 0,
       curvature_enabled = true, curvature_amount = 35, curvature_corner_radius = 8,
       aberration_enabled = false,
-      vignette_enabled = true, vignette_intensity = 45, vignette_radius = 55, vignette_softness = 40,
+      vignette_enabled = true, vignette_intensity = 45, vignette_radius = 55, vignette_softness = 40, vignette_ratio = "auto",
       bloom_enabled = true, bloom_threshold = 140, bloom_radius = 3, bloom_intensity = 25,
       noise_enabled = true, noise_intensity = 10, noise_grain_size = 1, noise_monochrome = true,
     }
@@ -85,7 +85,7 @@ local presets = {
       scanlines_enabled = true, scanlines_intensity = 50, scanlines_thickness = 1, scanlines_offset = 0,
       curvature_enabled = true, curvature_amount = 20, curvature_corner_radius = 4,
       aberration_enabled = true, aberration_shift_r = 1, aberration_shift_b = -1, aberration_falloff = 40,
-      vignette_enabled = true, vignette_intensity = 35, vignette_radius = 50, vignette_softness = 50,
+      vignette_enabled = true, vignette_intensity = 35, vignette_radius = 50, vignette_softness = 50, vignette_ratio = "auto",
       bloom_enabled = true, bloom_threshold = 160, bloom_radius = 2, bloom_intensity = 20,
       noise_enabled = true, noise_intensity = 12, noise_grain_size = 1, noise_monochrome = true,
     }
@@ -97,7 +97,7 @@ local presets = {
       scanlines_enabled = true, scanlines_intensity = 30, scanlines_thickness = 1, scanlines_offset = 0,
       curvature_enabled = true, curvature_amount = 50, curvature_corner_radius = 12,
       aberration_enabled = true, aberration_shift_r = 3, aberration_shift_b = -3, aberration_falloff = 60,
-      vignette_enabled = true, vignette_intensity = 50, vignette_radius = 40, vignette_softness = 30,
+      vignette_enabled = true, vignette_intensity = 50, vignette_radius = 40, vignette_softness = 30, vignette_ratio = "auto",
       bloom_enabled = true, bloom_threshold = 120, bloom_radius = 4, bloom_intensity = 40,
       noise_enabled = true, noise_intensity = 20, noise_grain_size = 2, noise_monochrome = false,
     }
@@ -109,7 +109,7 @@ local presets = {
       scanlines_enabled = true, scanlines_intensity = 85, scanlines_thickness = 1, scanlines_offset = 0,
       curvature_enabled = false,
       aberration_enabled = false,
-      vignette_enabled = true, vignette_intensity = 15, vignette_radius = 60, vignette_softness = 60,
+      vignette_enabled = true, vignette_intensity = 15, vignette_radius = 60, vignette_softness = 60, vignette_ratio = "auto",
       bloom_enabled = false,
       noise_enabled = true, noise_intensity = 5, noise_grain_size = 1, noise_monochrome = true,
     }
@@ -121,7 +121,7 @@ local presets = {
       scanlines_enabled = true, scanlines_intensity = 75, scanlines_thickness = 1, scanlines_offset = 0,
       curvature_enabled = true, curvature_amount = 15, curvature_corner_radius = 3,
       aberration_enabled = true, aberration_shift_r = 1, aberration_shift_b = -1, aberration_falloff = 30,
-      vignette_enabled = true, vignette_intensity = 25, vignette_radius = 55, vignette_softness = 50,
+      vignette_enabled = true, vignette_intensity = 25, vignette_radius = 55, vignette_softness = 50, vignette_ratio = "auto",
       bloom_enabled = true, bloom_threshold = 150, bloom_radius = 2, bloom_intensity = 15,
       noise_enabled = true, noise_intensity = 8, noise_grain_size = 1, noise_monochrome = true,
       rgb_mask_enabled = true, rgb_mask_intensity = 25, rgb_mask_type = "shadow", rgb_mask_width = 1,
@@ -134,7 +134,7 @@ local presets = {
       scanlines_enabled = false,
       curvature_enabled = false,
       aberration_enabled = true, aberration_shift_r = 3, aberration_shift_b = -2, aberration_falloff = 80,
-      vignette_enabled = true, vignette_intensity = 30, vignette_radius = 40, vignette_softness = 40,
+      vignette_enabled = true, vignette_intensity = 30, vignette_radius = 40, vignette_softness = 40, vignette_ratio = "auto",
       bloom_enabled = true, bloom_threshold = 180, bloom_radius = 3, bloom_intensity = 20,
       noise_enabled = true, noise_intensity = 25, noise_grain_size = 2, noise_monochrome = false,
       jitter_enabled = true, jitter_intensity = 30, jitter_direction = "horizontal",
@@ -149,7 +149,7 @@ local presets = {
       scanlines_enabled = true, scanlines_intensity = 55, scanlines_thickness = 1, scanlines_offset = 0,
       curvature_enabled = true, curvature_amount = 20, curvature_corner_radius = 5,
       aberration_enabled = false,
-      vignette_enabled = true, vignette_intensity = 35, vignette_radius = 50, vignette_softness = 45,
+      vignette_enabled = true, vignette_intensity = 35, vignette_radius = 50, vignette_softness = 45, vignette_ratio = "auto",
       bloom_enabled = true, bloom_threshold = 130, bloom_radius = 2, bloom_intensity = 20,
       noise_enabled = true, noise_intensity = 6, noise_grain_size = 1, noise_monochrome = true,
       rgb_mask_enabled = true, rgb_mask_intensity = 40, rgb_mask_type = "grille", rgb_mask_width = 2,
@@ -163,7 +163,7 @@ local presets = {
       scanlines_enabled = true, scanlines_intensity = 90, scanlines_thickness = 1, scanlines_offset = 0,
       curvature_enabled = false,
       aberration_enabled = false,
-      vignette_enabled = true, vignette_intensity = 10, vignette_radius = 65, vignette_softness = 70,
+      vignette_enabled = true, vignette_intensity = 10, vignette_radius = 65, vignette_softness = 70, vignette_ratio = "auto",
       bloom_enabled = false,
       noise_enabled = false,
       rgb_mask_enabled = false,
@@ -176,7 +176,7 @@ local presets = {
       scanlines_enabled = true, scanlines_intensity = 40, scanlines_thickness = 2, scanlines_offset = 1,
       curvature_enabled = true, curvature_amount = 45, curvature_corner_radius = 10,
       aberration_enabled = true, aberration_shift_r = 5, aberration_shift_b = -5, aberration_falloff = 90,
-      vignette_enabled = true, vignette_intensity = 55, vignette_radius = 30, vignette_softness = 20,
+      vignette_enabled = true, vignette_intensity = 55, vignette_radius = 30, vignette_softness = 20, vignette_ratio = "auto",
       bloom_enabled = true, bloom_threshold = 100, bloom_radius = 5, bloom_intensity = 50,
       noise_enabled = true, noise_intensity = 35, noise_grain_size = 3, noise_monochrome = false,
       color_temp_enabled = true, color_temp_value = 4000, color_temp_intensity = 60,
@@ -245,10 +245,27 @@ end
 -- ============================================================
 -- Apply preset to dialog
 -- ============================================================
-local function applyPresetToDialog(dlg, preset_params, params)
+local function applyPresetToDialog(dlg, preset_params, params, T)
+  -- Step 1: reset all params to defaults
+  for k, v in pairs(defaults) do
+    params[k] = v
+  end
+  -- Step 2: apply preset values on top
   for k, v in pairs(preset_params) do
     params[k] = v
-    if type(v) == "boolean" then
+  end
+  -- Step 3: update all dialog controls
+  for k, v in pairs(params) do
+    if k == "rgb_mask_type" then
+      local label = (v == "shadow") and T.mask_shadow or (v == "slot") and T.mask_slot or T.mask_grille
+      pcall(function() dlg:modify{ id = k, text = label } end)
+    elseif k == "jitter_direction" then
+      local label = (v == "vertical") and T.dir_vertical or T.dir_horizontal
+      pcall(function() dlg:modify{ id = k, text = label } end)
+    elseif k == "vignette_ratio" then
+      local label = (v == "1:1" and T.ratio_1_1 or v == "4:3" and T.ratio_4_3 or v == "16:9" and T.ratio_16_9 or T.ratio_auto)
+      pcall(function() dlg:modify{ id = k, text = label } end)
+    elseif type(v) == "boolean" then
       pcall(function() dlg:modify{ id = k, selected = v } end)
     else
       pcall(function() dlg:modify{ id = k, text = tostring(v) } end)
@@ -427,7 +444,7 @@ function DialogUI.show(plugin)
       local selected = dlg.data.preset_select
       for _, p in ipairs(presets) do
         if T[p.name_key] == selected then
-          applyPresetToDialog(dlg, p.params, params)
+          applyPresetToDialog(dlg, p.params, params, T)
           updatePreview()
           break
         end
@@ -437,6 +454,30 @@ function DialogUI.show(plugin)
 
   dlg:label{ text = "" }
   dlg:check{ id = "dup_layer", label = T.dup_layer, selected = prefs.dup_layer or false }
+
+  dlg:button{ id = "disable_all", text = T.disable_all_btn, hexpand = false,
+    onclick = function()
+      local enabled_keys = {
+        "scanlines_enabled", "curvature_enabled", "aberration_enabled",
+        "vignette_enabled", "bloom_enabled", "noise_enabled",
+        "color_temp_enabled", "pixelation_enabled", "rgb_mask_enabled",
+        "ripple_enabled", "jitter_enabled", "persistence_enabled"
+      }
+      for _, k in ipairs(enabled_keys) do
+        params[k] = false
+        pcall(function() dlg:modify{ id = k, selected = false } end)
+      end
+      updatePreview()
+      dlg:repaint()
+    end
+  }
+  dlg:button{ id = "reset_default", text = T.reset_default_btn, hexpand = false,
+    onclick = function()
+      applyPresetToDialog(dlg, {}, params, T)
+      updatePreview()
+      dlg:repaint()
+    end
+  }
 
   -- ===== Custom Presets =====
   if not prefs.custom_presets then prefs.custom_presets = {} end
@@ -466,7 +507,7 @@ function DialogUI.show(plugin)
         local selected = dlg.data.custom_preset_select
         local cp = prefs.custom_presets[selected]
         if cp then
-          applyPresetToDialog(dlg, cp, params)
+          applyPresetToDialog(dlg, cp, params, T)
           updatePreview()
         end
       end
@@ -567,6 +608,19 @@ function DialogUI.show(plugin)
     onchange = function() updatePreview() end }
   dlg:slider{ id = "vignette_softness", label = T.softness, min = 0, max = 100, value = params.vignette_softness, hexpand = true,
     onchange = function() updatePreview() end }
+  dlg:combobox{ id = "vignette_ratio", label = T.ratio,
+    option = (params.vignette_ratio == "1:1" and T.ratio_1_1 or params.vignette_ratio == "4:3" and T.ratio_4_3 or params.vignette_ratio == "16:9" and T.ratio_16_9 or T.ratio_auto),
+    options = { T.ratio_auto, T.ratio_1_1, T.ratio_4_3, T.ratio_16_9 },
+    hexpand = true,
+    onchange = function()
+      local v = dlg.data.vignette_ratio
+      if v == T.ratio_1_1 then params.vignette_ratio = "1:1"
+      elseif v == T.ratio_4_3 then params.vignette_ratio = "4:3"
+      elseif v == T.ratio_16_9 then params.vignette_ratio = "16:9"
+      else params.vignette_ratio = "auto" end
+      updatePreview()
+    end
+  }
 
   dlg:separator{ text = T.sep_noise }
   dlg:check{ id = "noise_enabled", label = T.enable, selected = params.noise_enabled,
@@ -681,6 +735,7 @@ function DialogUI.show(plugin)
         vignette_intensity = math.random(0, 60),
         vignette_radius = math.random(20, 80),
         vignette_softness = math.random(20, 80),
+        vignette_ratio = ({"auto", "1:1", "4:3", "16:9"})[math.random(1, 4)],
         bloom_enabled = math.random() > 0.5,
         bloom_threshold = math.random(80, 200),
         bloom_radius = math.random(1, 5),
@@ -719,6 +774,9 @@ function DialogUI.show(plugin)
           pcall(function() dlg:modify{ id = k, text = label } end)
         elseif k == "jitter_direction" then
           local label = (v == "vertical") and T.dir_vertical or T.dir_horizontal
+          pcall(function() dlg:modify{ id = k, text = label } end)
+        elseif k == "vignette_ratio" then
+          local label = (v == "1:1" and T.ratio_1_1 or v == "4:3" and T.ratio_4_3 or v == "16:9" and T.ratio_16_9 or T.ratio_auto)
           pcall(function() dlg:modify{ id = k, text = label } end)
         elseif type(v) == "boolean" then
           pcall(function() dlg:modify{ id = k, selected = v } end)

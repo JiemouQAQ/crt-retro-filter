@@ -56,6 +56,8 @@ local strings = {
     preset_glitch_name = "Heavy Glitch",
     preset_glitch_desc = "Experimental: all effects maxed for glitch art",
     randomize_btn = "Randomize",
+    disable_all_btn = "Disable All",
+    reset_default_btn = "Reset Default",
 
     -- Screen tab
     sep_scanlines = "Scanlines",
@@ -77,6 +79,11 @@ local strings = {
     sep_vignette = "Vignette",
     inner = "Inner:",
     softness = "Softness:",
+    ratio = "Ratio:",
+    ratio_auto = "Auto",
+    ratio_1_1 = "1:1",
+    ratio_4_3 = "4:3",
+    ratio_16_9 = "16:9",
     sep_noise = "Noise / Static",
     grain = "Grain:",
     monochrome = "Monochrome:",
@@ -166,6 +173,8 @@ local strings = {
     preset_glitch_name = "重度故障",
     preset_glitch_desc = "实验风格：所有效果全开、故障艺术",
     randomize_btn = "随机生成",
+    disable_all_btn = "关闭全部",
+    reset_default_btn = "恢复默认",
 
     -- Screen tab
     sep_scanlines = "扫描线",
@@ -187,6 +196,11 @@ local strings = {
     sep_vignette = "暗角",
     inner = "内径:",
     softness = "柔和度:",
+    ratio = "宽高比:",
+    ratio_auto = "自动",
+    ratio_1_1 = "1:1",
+    ratio_4_3 = "4:3",
+    ratio_16_9 = "16:9",
     sep_noise = "噪点",
     grain = "颗粒:",
     monochrome = "单色:",

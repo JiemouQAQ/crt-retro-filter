@@ -14,9 +14,9 @@ local Scanlines = {}
 --   thickness: 1-4, scanline thickness in pixel rows
 --   offset: 0 or 1, which row set gets darkened
 function Scanlines.apply(image, params)
-  local intensity = params.intensity or 70
-  local thickness = params.thickness or 1
-  local offset = params.offset or 0
+  local intensity = params.scanlines_intensity or 70
+  local thickness = params.scanlines_thickness or 1
+  local offset = params.scanlines_offset or 0
   local enabled = params.scanlines_enabled
 
   if enabled == false then return end
