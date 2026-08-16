@@ -5,6 +5,11 @@ All notable changes to the CRT Retro Filter extension.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [3.4.1] - 2026-02
+
+### Changed
+- CI: added GitHub Actions workflow that auto-packages the extension and publishes a GitHub Release on `v*` tags (first release through the pipeline)
+
 ## [3.4.0] - 2026-02
 
 ### Added

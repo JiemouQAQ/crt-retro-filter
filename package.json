@@ -2,7 +2,7 @@
   "name": "crt-retro-filter",
   "displayName": "CRT Retro Filter",
   "description": "Apply CRT monitor retro effects to your pixel art: scanlines, curvature, chromatic aberration, vignette, bloom, noise, color temperature, pixelation, RGB sub-pixel mask, horizontal ripple, interlacing jitter, and phosphor persistence.",
-  "version": "3.4.0",
+  "version": "3.4.1",
   "author": { "name": "CRT Retro Filter" },
   "publisher": "community",
   "license": "MIT",
