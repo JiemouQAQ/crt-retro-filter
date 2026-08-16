@@ -34,6 +34,7 @@ Render your pixel art through the lens of a classic CRT display. 12 independent 
 - **Custom Presets** — Save, load, and delete your own parameter combinations
 - **Randomize** — Generate random filter configurations with one click, all controls update visually
 - **Duplicate Layer Option** — Optionally apply filters to a new layer, preserving the original
+- **Selection Support** — Apply filters to the selected area only, leaving pixels outside untouched
 - **Bilingual** — Full English and Chinese (中文) interface, switchable in the dialog
 - **Quick Apply** — Re-apply last saved settings without opening the dialog
 - **Keyboard Shortcut** — Bind a hotkey to the Randomize command for rapid experimentation
@@ -96,7 +97,7 @@ The dialog is organized into five tabs:
 
 | Tab | Contents |
 |-----|----------|
-| **Presets** | Preset selection, language switch, duplicate layer option, custom preset management, Randomize button |
+| **Presets** | Preset selection, language switch, duplicate layer option, selection-only option, custom preset management, Randomize button |
 | **Screen** | Scanlines, Screen Curvature, Chromatic Aberration |
 | **Display** | Bloom / Glow, Vignette, Noise / Static |
 | **Pixel** | Color Temperature, Pixelation, RGB Phosphor Mask |
@@ -116,6 +117,12 @@ While comparing, the preview area is outlined with a green border as a hint.
 ### Duplicate Layer
 
 Check **"Duplicate Layer Before Apply"** in the Presets tab to apply filters to a new copy of the active layer, keeping the original untouched. The new layer is named `{original name} CRT`.
+
+### Selection Only
+
+Check **"Selection Only"** in the Presets tab to apply filters only to the pixels inside the active selection; pixels outside stay untouched. The preview reflects the masked result too.
+
+If no selection is active when checked, an alert is shown when you click **Apply**.
 
 ## Filter Reference
 

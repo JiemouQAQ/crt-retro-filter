@@ -191,13 +191,15 @@ local presets = {
 
 -- ============================================================
 -- Scale image to preview size (nearest-neighbor, preserves aspect ratio)
+-- Returns the scaled image plus the scale factor used
+-- (preview pixel -> image pixel mapping is px / scale).
 -- ============================================================
 local function scaleToPreviewSize(img, maxDim)
   maxDim = maxDim or 160
   local w = img.width
   local h = img.height
   local cur_max = math.max(w, h)
-  if cur_max == 0 then return img:clone() end
+  if cur_max == 0 then return img:clone(), 1.0 end
 
   local scale = 1.0
   if cur_max < 96 then
@@ -210,7 +212,7 @@ local function scaleToPreviewSize(img, maxDim)
   local new_h = math.max(1, math.floor(h * scale))
 
   if new_w == w and new_h == h then
-    return img:clone()
+    return img:clone(), 1.0
   end
 
   local result = Image(new_w, new_h, img.colorMode)
@@ -219,7 +221,7 @@ local function scaleToPreviewSize(img, maxDim)
     local sy = math.max(0, math.min(h - 1, math.floor(it.y / scale)))
     it(img:getPixel(sx, sy))
   end
-  return result
+  return result, scale
 end
 
 -- ============================================================
@@ -406,8 +408,17 @@ function DialogUI.show(plugin)
   end
   local params = prefs.params
 
+  -- Selection captured at dialog open (dialogs are modal in Aseprite)
+  local sel = nil
+  local spriteSel = app.activeSprite and app.activeSprite.selection
+  if spriteSel and not spriteSel.isEmpty and spriteSel.bounds.width > 0 then
+    sel = spriteSel
+  end
+  local selectionOnly = prefs.sel_only or false
+  local previewScale = 1.0
+
   -- Scale original to preview size (preserves aspect ratio)
-  originalPreview = scaleToPreviewSize(cel.image, 160)
+  originalPreview, previewScale = scaleToPreviewSize(cel.image, 160)
   previewImg = originalPreview:clone()
   previewImg = DialogUI.applyFilters(previewImg, params)
 
@@ -468,6 +479,22 @@ function DialogUI.show(plugin)
   dlg:label{ text = "  " .. T.compare_hint }
 
   -- ===== Real-time preview update with change detection =====
+	-- Restore original preview pixels outside the selection.
+	-- The preview is scaled, so map preview px/py back to image pixels via
+	-- previewScale, then to sprite coordinates with the cel offset.
+	local function applySelectionMask()
+	  if not (selectionOnly and sel and previewImg and originalPreview) then return end
+	  for py = 0, previewImg.height - 1 do
+	    for px = 0, previewImg.width - 1 do
+	      local ix = math.floor(px / previewScale)
+	      local iy = math.floor(py / previewScale)
+	      if not sel:contains(ix + cel.position.x, iy + cel.position.y) then
+	        previewImg:putPixel(px, py, originalPreview:getPixel(px, py))
+	      end
+	    end
+	  end
+	end
+
 	local function updatePreview()
 	  if not originalPreview then return end
 	  syncParams(dlg, params)
@@ -481,7 +508,7 @@ function DialogUI.show(plugin)
 	        break
 	      end
 	    end
-	    if not changed then return end
+	    if not changed then applySelectionMask(); dlg:repaint(); return end
 	  end
 
 	  -- Snapshot current params for next comparison
@@ -492,6 +519,7 @@ function DialogUI.show(plugin)
 
 	  previewImg = originalPreview:clone()
 	  previewImg = DialogUI.applyFilters(previewImg, params)
+	  applySelectionMask()
 	  dlg:repaint()
 	end
 
@@ -541,6 +569,12 @@ function DialogUI.show(plugin)
 
   dlg:label{ text = "" }
   dlg:check{ id = "dup_layer", label = T.dup_layer, selected = prefs.dup_layer or false }
+  dlg:check{ id = "sel_only", label = T.sel_only, selected = prefs.sel_only or false,
+    onclick = function()
+      selectionOnly = dlg.data.sel_only
+      updatePreview()
+    end
+  }
 
   dlg:button{ id = "disable_all", text = T.disable_all_btn, hexpand = false,
     onclick = function()
@@ -846,9 +880,10 @@ function DialogUI.show(plugin)
     syncParams(dlg, params)
     prefs.params = params
     prefs.dup_layer = data.dup_layer
+    prefs.sel_only = data.sel_only
 
     local sprite = app.activeSprite
-    DialogUI.applyToActiveLayer(sprite, params, T, data.dup_layer)
+    DialogUI.applyToActiveLayer(sprite, params, T, data.dup_layer, data.sel_only)
   end
 
   originalPreview = nil
@@ -857,9 +892,29 @@ function DialogUI.show(plugin)
 end
 
 -- ============================================================
+-- Mask a filtered image back to the selection: pixels outside the
+-- selection are restored from the original. Selection coordinates
+-- are sprite-space, so the cel position offset is applied.
+-- ============================================================
+function DialogUI.maskToSelection(filtered, original, selection, celPos)
+  local w = filtered.width
+  local h = filtered.height
+  local ox = celPos and celPos.x or 0
+  local oy = celPos and celPos.y or 0
+  for y = 0, h - 1 do
+    for x = 0, w - 1 do
+      if not selection:contains(x + ox, y + oy) then
+        filtered:putPixel(x, y, original:getPixel(x, y))
+      end
+    end
+  end
+  return filtered
+end
+
+-- ============================================================
 -- Apply filter to the active layer only
 -- ============================================================
-function DialogUI.applyToActiveLayer(sprite, params, T, duplicate)
+function DialogUI.applyToActiveLayer(sprite, params, T, duplicate, selectionOnly)
   if not sprite then return end
 
   local layer = app.activeLayer
@@ -883,6 +938,18 @@ function DialogUI.applyToActiveLayer(sprite, params, T, duplicate)
     return
   end
 
+  -- Resolve the pixel selection (only when requested)
+  local selection = nil
+  if selectionOnly then
+    local spriteSel = sprite.selection
+    if spriteSel and not spriteSel.isEmpty and spriteSel.bounds.width > 0 then
+      selection = spriteSel
+    else
+      app.alert(T.no_selection)
+      return
+    end
+  end
+
   app.transaction(T.txn_single, function()
     if duplicate then
       local newLayer = sprite:newLayer()
@@ -892,10 +959,12 @@ function DialogUI.applyToActiveLayer(sprite, params, T, duplicate)
       newCel.position = cel.position
       local img = newCel.image:clone()
       img = DialogUI.applyFilters(img, params)
+      if selection then img = DialogUI.maskToSelection(img, cel.image, selection, newCel.position) end
       newCel.image = img
     else
       local img = cel.image:clone()
       img = DialogUI.applyFilters(img, params)
+      if selection then img = DialogUI.maskToSelection(img, cel.image, selection, cel.position) end
       cel.image = img
     end
   end)

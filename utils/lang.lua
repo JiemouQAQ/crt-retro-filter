@@ -35,6 +35,8 @@ local strings = {
     custom_presets = "Custom Presets",
     no_custom_presets = "No custom presets saved.",
     dup_layer = "Duplicate Layer Before Apply",
+    sel_only = "Selection Only:",
+    no_selection = "No active selection. Create a selection first, or uncheck Selection Only.",
     compare_orig = "Compare Original",
     compare_hint = "Hold the preview with the left mouse button to peek at the original",
 
@@ -155,6 +157,8 @@ local strings = {
     custom_presets = "自定义预设",
     no_custom_presets = "暂无自定义预设。",
     dup_layer = "复制图层再应用",
+    sel_only = "只应用到选区:",
+    no_selection = "没有活动的选区，请先创建选区，或取消勾选「只应用到选区」。",
     compare_orig = "对比原图",
     compare_hint = "按住预览画布（鼠标左键）可临时查看原图",
 
