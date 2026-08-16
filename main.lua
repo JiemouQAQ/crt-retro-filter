@@ -79,6 +79,9 @@ function init(plugin)
       end
 
       local params = DialogUI.generateRandomParams()
+      -- keep the user's global strength dial when randomizing from the menu
+      local savedParams = plugin.preferences.params
+      params.global_strength = (savedParams and savedParams.global_strength) or 100
 
       app.transaction("CRT Randomize", function()
         DialogUI.applyToActiveLayer(app.activeSprite, params, T, false, prefs.sel_only or false)

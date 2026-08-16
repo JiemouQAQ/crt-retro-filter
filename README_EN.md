@@ -31,6 +31,7 @@ Render your pixel art through the lens of a classic CRT display. 12 independent 
 - **Real-time Preview** — See changes instantly as you adjust parameters, powered by an on-canvas preview with change detection for performance
 - **Before/After Compare** — Toggle or hold the preview canvas to switch between the filtered result and the original
 - **9 Built-in Presets** — Classic Arcade, 80s Computer, Broadcast TV, Subtle Retro, CRT Monitor, VHS Tape, Trinitron, Pixel Perfect, Heavy Glitch
+- **Preset Strength** — One slider dials the overall effect intensity of all filters (0–100%), kept when switching built-in presets
 - **Custom Presets** — Save, load, and delete your own parameter combinations
 - **Randomize** — Generate random filter configurations with one click, all controls update visually
 - **Duplicate Layer Option** — Optionally apply filters to a new layer, preserving the original
@@ -97,13 +98,23 @@ The dialog is organized into five tabs:
 
 | Tab | Contents |
 |-----|----------|
-| **Presets** | Preset selection, language switch, duplicate layer option, selection-only option, custom preset management, Randomize button |
+| **Presets** | Preset selection, preset strength, language switch, duplicate layer option, selection-only option, custom preset management, Randomize button |
 | **Screen** | Scanlines, Screen Curvature, Chromatic Aberration |
 | **Display** | Bloom / Glow, Vignette, Noise / Static |
 | **Pixel** | Color Temperature, Pixelation, RGB Phosphor Mask |
 | **Signal** | Horizontal Ripple, Interlacing Jitter, Phosphor Persistence |
 
 Each filter has an independent **Enable** toggle. Click **Apply** to commit — all changes are grouped into a single undo step (`Ctrl+Z`).
+
+### Preset Strength
+
+The **"Preset Strength"** slider below the preset dropdown dials the overall intensity of every filter:
+
+- **100%** — full effect (default)
+- **50%** — half effect, half original
+- **0%** — identical to the original image
+
+The slider keeps your value when switching built-in presets; saving a custom preset stores the strength along with it.
 
 ### Before/After Compare
 

@@ -19,6 +19,7 @@ local Ripple = require("filters.horizontal_ripple")
 local Jitter = require("filters.interlacing_jitter")
 local Persistence = require("filters.phosphor_persistence")
 local Lang = require("utils.lang")
+local ColorUtils = require("utils.color")
 
 local DialogUI = {}
 
@@ -60,6 +61,7 @@ local paramKeys = {
   "ripple_enabled", "ripple_amplitude", "ripple_frequency", "ripple_phase", "ripple_falloff",
   "jitter_enabled", "jitter_intensity", "jitter_direction",
   "persistence_enabled", "persistence_intensity", "persistence_threshold",
+  "global_strength",
 }
 
 -- ============================================================
@@ -258,7 +260,9 @@ local function applyPresetToDialog(dlg, preset_params, params, T)
   end
   -- Step 3: update all dialog controls
   for k, v in pairs(params) do
-    if k == "rgb_mask_type" then
+    if k == "global_strength" then
+      pcall(function() dlg:modify{ id = k, value = v } end)
+    elseif k == "rgb_mask_type" then
       local label = (v == "shadow") and T.mask_shadow or (v == "slot") and T.mask_slot or T.mask_grille
       pcall(function() dlg:modify{ id = k, text = label } end)
     elseif k == "jitter_direction" then
@@ -280,6 +284,21 @@ end
 -- ============================================================
 function DialogUI.applyFilters(image, params)
   local img = image
+
+  -- Global preset strength (0-100): blend the filtered result back toward
+  -- the original. The snapshot is cloned up front because the in-place
+  -- filters below would otherwise mutate the reference we blend against.
+  -- 0% short-circuits (original returned untouched), 100%/absent = full
+  -- effect (no blend at all).
+  local strength = params.global_strength
+  local original = nil
+  if strength ~= nil then
+    if strength <= 0 then
+      return image
+    elseif strength < 100 then
+      original = image:clone()
+    end
+  end
 
   if params.pixelation_enabled and params.pixelation_block_size > 1 then
     img = Pixelation.apply(img, params)
@@ -316,6 +335,25 @@ function DialogUI.applyFilters(image, params)
   end
   if params.noise_enabled then
     Noise.apply(img, params)
+  end
+
+  -- Blend the filtered result back toward the pristine original snapshot
+  if original then
+    local t = strength / 100.0
+    local w = img.width
+    local h = img.height
+    for y = 0, h - 1 do
+      for x = 0, w - 1 do
+        local fr, fg, fb, fa = ColorUtils.getRGBA(img:getPixel(x, y))
+        local orr, og, ob, oa = ColorUtils.getRGBA(original:getPixel(x, y))
+        img:putPixel(x, y, ColorUtils.makeRGBA(
+          orr + (fr - orr) * t,
+          og + (fg - og) * t,
+          ob + (fb - ob) * t,
+          oa + (fa - oa) * t
+        ))
+      end
+    end
   end
 
   return img
@@ -566,6 +604,10 @@ function DialogUI.show(plugin)
       end
     end
   }
+
+  dlg:slider{ id = "global_strength", label = T.preset_strength, min = 0, max = 100,
+    value = params.global_strength or 100, hexpand = true,
+    onchange = function() updatePreview() end }
 
   dlg:label{ text = "" }
   dlg:check{ id = "dup_layer", label = T.dup_layer, selected = prefs.dup_layer or false }

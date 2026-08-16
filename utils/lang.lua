@@ -62,6 +62,7 @@ local strings = {
     randomize_btn = "Randomize",
     disable_all_btn = "Disable All",
     reset_default_btn = "Reset Default",
+    preset_strength = "Preset Strength:",
 
     -- Screen tab
     sep_scanlines = "Scanlines",
@@ -184,6 +185,7 @@ local strings = {
     randomize_btn = "随机生成",
     disable_all_btn = "关闭全部",
     reset_default_btn = "恢复默认",
+    preset_strength = "预设强度:",
 
     -- Screen tab
     sep_scanlines = "扫描线",
