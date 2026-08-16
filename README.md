@@ -48,40 +48,140 @@ Render your pixel art through the lens of a classic CRT display. 12 independent 
 ### Original
 
 <p align="center">
-  <img src="assets/showcase/original.png" alt="Original" width="360">
+  <img src="assets/showcase/original.png" alt="Original" width="1280">
 </p>
 
 ### Preset Gallery
 
-| Classic Arcade | 80s Computer | Broadcast TV |
-| --- | --- | --- |
-| <img src="assets/showcase/preset-classic-arcade.png" alt="Classic Arcade" width="240"> | <img src="assets/showcase/preset-80s-computer.png" alt="80s Computer" width="240"> | <img src="assets/showcase/preset-broadcast-tv.png" alt="Broadcast TV" width="240"> |
+**Classic Arcade** — Strong scanlines, noticeable curvature, vignette
 
-| Subtle Retro | CRT Monitor | VHS Tape |
-| --- | --- | --- |
-| <img src="assets/showcase/preset-subtle-retro.png" alt="Subtle Retro" width="240"> | <img src="assets/showcase/preset-crt-monitor.png" alt="CRT Monitor" width="240"> | <img src="assets/showcase/preset-vhs-tape.png" alt="VHS Tape" width="240"> |
+<p align="center">
+  <img src="assets/showcase/preset-classic-arcade.png" alt="Classic Arcade" width="1280">
+</p>
 
-| Trinitron | Pixel Perfect | Heavy Glitch |
-| --- | --- | --- |
-| <img src="assets/showcase/preset-trinitron.png" alt="Trinitron" width="240"> | <img src="assets/showcase/preset-pixel-perfect.png" alt="Pixel Perfect" width="240"> | <img src="assets/showcase/preset-heavy-glitch.png" alt="Heavy Glitch" width="240"> |
+**80s Computer** — Moderate scanlines, subtle chromatic aberration
+
+<p align="center">
+  <img src="assets/showcase/preset-80s-computer.png" alt="80s Computer" width="1280">
+</p>
+
+**Broadcast TV** — Heavy curvature, strong aberration, large bloom
+
+<p align="center">
+  <img src="assets/showcase/preset-broadcast-tv.png" alt="Broadcast TV" width="1280">
+</p>
+
+**Subtle Retro** — Very light scanlines and vignette only
+
+<p align="center">
+  <img src="assets/showcase/preset-subtle-retro.png" alt="Subtle Retro" width="1280">
+</p>
+
+**CRT Monitor** — 90s PC: thin scanlines, light bloom, RGB shadow mask
+
+<p align="center">
+  <img src="assets/showcase/preset-crt-monitor.png" alt="CRT Monitor" width="1280">
+</p>
+
+**VHS Tape** — Degraded VHS: jitter, noise, color temperature shift
+
+<p align="center">
+  <img src="assets/showcase/preset-vhs-tape.png" alt="VHS Tape" width="1280">
+</p>
+
+**Trinitron** — Sony aperture grille, deep contrast, sharp
+
+<p align="center">
+  <img src="assets/showcase/preset-trinitron.png" alt="Trinitron" width="1280">
+</p>
+
+**Pixel Perfect** — Minimal CRT: subtle scanlines, no distortion
+
+<p align="center">
+  <img src="assets/showcase/preset-pixel-perfect.png" alt="Pixel Perfect" width="1280">
+</p>
+
+**Heavy Glitch** — All effects maxed for experimental glitch art
+
+<p align="center">
+  <img src="assets/showcase/preset-heavy-glitch.png" alt="Heavy Glitch" width="1280">
+</p>
 
 ### Individual Filter Effects
 
-| Pixelation | Screen Curvature | Chromatic Aberration |
-| --- | --- | --- |
-| <img src="assets/filters/pixelation.png" alt="Pixelation" width="240"> | <img src="assets/filters/curvature.png" alt="Screen Curvature" width="240"> | <img src="assets/filters/aberration.png" alt="Chromatic Aberration" width="240"> |
+(ordered by dialog tabs: Screen → Display → Pixel → Signal)
 
-| Horizontal Ripple | Interlacing Jitter | Scanlines |
-| --- | --- | --- |
-| <img src="assets/filters/ripple.png" alt="Horizontal Ripple" width="240"> | <img src="assets/filters/jitter.png" alt="Interlacing Jitter" width="240"> | <img src="assets/filters/scanlines.png" alt="Scanlines" width="240"> |
+**Scanlines** (Screen)
 
-| RGB Phosphor Mask | Bloom / Glow | Phosphor Persistence |
-| --- | --- | --- |
-| <img src="assets/filters/rgb-mask.png" alt="RGB Phosphor Mask" width="240"> | <img src="assets/filters/bloom.png" alt="Bloom / Glow" width="240"> | <img src="assets/filters/persistence.png" alt="Phosphor Persistence" width="240"> |
+<p align="center">
+  <img src="assets/filters/scanlines.png" alt="Scanlines" width="1280">
+</p>
 
-| Vignette | Color Temperature | Noise / Static |
-| --- | --- | --- |
-| <img src="assets/filters/vignette.png" alt="Vignette" width="240"> | <img src="assets/filters/color-temp.png" alt="Color Temperature" width="240"> | <img src="assets/filters/noise.png" alt="Noise / Static" width="240"> |
+**Screen Curvature** (Screen)
+
+<p align="center">
+  <img src="assets/filters/curvature.png" alt="Screen Curvature" width="1280">
+</p>
+
+**Chromatic Aberration** (Screen)
+
+<p align="center">
+  <img src="assets/filters/aberration.png" alt="Chromatic Aberration" width="1280">
+</p>
+
+**Bloom / Glow** (Display)
+
+<p align="center">
+  <img src="assets/filters/bloom.png" alt="Bloom / Glow" width="1280">
+</p>
+
+**Vignette** (Display)
+
+<p align="center">
+  <img src="assets/filters/vignette.png" alt="Vignette" width="1280">
+</p>
+
+**Noise / Static** (Display)
+
+<p align="center">
+  <img src="assets/filters/noise.png" alt="Noise / Static" width="1280">
+</p>
+
+**Color Temperature** (Pixel)
+
+<p align="center">
+  <img src="assets/filters/color-temp.png" alt="Color Temperature" width="1280">
+</p>
+
+**Pixelation** (Pixel)
+
+<p align="center">
+  <img src="assets/filters/pixelation.png" alt="Pixelation" width="1280">
+</p>
+
+**RGB Phosphor Mask** (Pixel)
+
+<p align="center">
+  <img src="assets/filters/rgb-mask.png" alt="RGB Phosphor Mask" width="1280">
+</p>
+
+**Horizontal Ripple** (Signal)
+
+<p align="center">
+  <img src="assets/filters/ripple.png" alt="Horizontal Ripple" width="1280">
+</p>
+
+**Interlacing Jitter** (Signal)
+
+<p align="center">
+  <img src="assets/filters/jitter.png" alt="Interlacing Jitter" width="1280">
+</p>
+
+**Phosphor Persistence** (Signal)
+
+<p align="center">
+  <img src="assets/filters/persistence.png" alt="Phosphor Persistence" width="1280">
+</p>
 
 ### Plugin Dialog
 

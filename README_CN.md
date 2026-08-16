@@ -48,40 +48,140 @@
 ### 原图
 
 <p align="center">
-  <img src="assets/showcase/original.png" alt="原图" width="360">
+  <img src="assets/showcase/original.png" alt="原图" width="1280">
 </p>
 
 ### 九套预设效果
 
-| 经典街机 | 80 年代电脑 | 老式电视 |
-| --- | --- | --- |
-| <img src="assets/showcase/preset-classic-arcade.png" alt="经典街机" width="240"> | <img src="assets/showcase/preset-80s-computer.png" alt="80 年代电脑" width="240"> | <img src="assets/showcase/preset-broadcast-tv.png" alt="老式电视" width="240"> |
+**经典街机** — 强力扫描线、明显弧度、暗角
 
-| 轻复古 | CRT 显示器 | VHS 录像带 |
-| --- | --- | --- |
-| <img src="assets/showcase/preset-subtle-retro.png" alt="轻复古" width="240"> | <img src="assets/showcase/preset-crt-monitor.png" alt="CRT 显示器" width="240"> | <img src="assets/showcase/preset-vhs-tape.png" alt="VHS 录像带" width="240"> |
+<p align="center">
+  <img src="assets/showcase/preset-classic-arcade.png" alt="经典街机" width="1280">
+</p>
 
-| 特丽珑 | 像素完美 | 重度故障 |
-| --- | --- | --- |
-| <img src="assets/showcase/preset-trinitron.png" alt="特丽珑" width="240"> | <img src="assets/showcase/preset-pixel-perfect.png" alt="像素完美" width="240"> | <img src="assets/showcase/preset-heavy-glitch.png" alt="重度故障" width="240"> |
+**80 年代电脑** — 中等扫描线、轻微色差
+
+<p align="center">
+  <img src="assets/showcase/preset-80s-computer.png" alt="80 年代电脑" width="1280">
+</p>
+
+**老式电视** — 强弧度、重色差、大光晕
+
+<p align="center">
+  <img src="assets/showcase/preset-broadcast-tv.png" alt="老式电视" width="1280">
+</p>
+
+**轻复古** — 仅轻微扫描线和暗角
+
+<p align="center">
+  <img src="assets/showcase/preset-subtle-retro.png" alt="轻复古" width="1280">
+</p>
+
+**CRT 显示器** — 90年代PC：细扫描线、轻微辉光、RGB点阵遮罩
+
+<p align="center">
+  <img src="assets/showcase/preset-crt-monitor.png" alt="CRT 显示器" width="1280">
+</p>
+
+**VHS 录像带** — 录像带劣化：抖动、噪点、色温偏移
+
+<p align="center">
+  <img src="assets/showcase/preset-vhs-tape.png" alt="VHS 录像带" width="1280">
+</p>
+
+**特丽珑** — 索尼栅格遮罩、高对比、锐利画面
+
+<p align="center">
+  <img src="assets/showcase/preset-trinitron.png" alt="特丽珑" width="1280">
+</p>
+
+**像素完美** — 极简CRT：微妙扫描线、无畸变
+
+<p align="center">
+  <img src="assets/showcase/preset-pixel-perfect.png" alt="像素完美" width="1280">
+</p>
+
+**重度故障** — 实验风格：所有效果全开、故障艺术
+
+<p align="center">
+  <img src="assets/showcase/preset-heavy-glitch.png" alt="重度故障" width="1280">
+</p>
 
 ### 单滤镜效果
 
-| 像素化 | 屏幕弧度 | 色差 |
-| --- | --- | --- |
-| <img src="assets/filters/pixelation.png" alt="像素化" width="240"> | <img src="assets/filters/curvature.png" alt="屏幕弧度" width="240"> | <img src="assets/filters/aberration.png" alt="色差" width="240"> |
+（按对话框标签页顺序：屏幕 → 显示 → 像素 → 信号）
 
-| 水平波纹 | 隔行扫描抖动 | 扫描线 |
-| --- | --- | --- |
-| <img src="assets/filters/ripple.png" alt="水平波纹" width="240"> | <img src="assets/filters/jitter.png" alt="隔行扫描抖动" width="240"> | <img src="assets/filters/scanlines.png" alt="扫描线" width="240"> |
+**扫描线**（屏幕）
 
-| RGB 荧光粉遮罩 | 辉光 | 荧光粉余晖 |
-| --- | --- | --- |
-| <img src="assets/filters/rgb-mask.png" alt="RGB 荧光粉遮罩" width="240"> | <img src="assets/filters/bloom.png" alt="辉光" width="240"> | <img src="assets/filters/persistence.png" alt="荧光粉余晖" width="240"> |
+<p align="center">
+  <img src="assets/filters/scanlines.png" alt="扫描线" width="1280">
+</p>
 
-| 暗角 | 色温 | 噪点 |
-| --- | --- | --- |
-| <img src="assets/filters/vignette.png" alt="暗角" width="240"> | <img src="assets/filters/color-temp.png" alt="色温" width="240"> | <img src="assets/filters/noise.png" alt="噪点" width="240"> |
+**屏幕弧度**（屏幕）
+
+<p align="center">
+  <img src="assets/filters/curvature.png" alt="屏幕弧度" width="1280">
+</p>
+
+**色差**（屏幕）
+
+<p align="center">
+  <img src="assets/filters/aberration.png" alt="色差" width="1280">
+</p>
+
+**辉光**（显示）
+
+<p align="center">
+  <img src="assets/filters/bloom.png" alt="辉光" width="1280">
+</p>
+
+**暗角**（显示）
+
+<p align="center">
+  <img src="assets/filters/vignette.png" alt="暗角" width="1280">
+</p>
+
+**噪点**（显示）
+
+<p align="center">
+  <img src="assets/filters/noise.png" alt="噪点" width="1280">
+</p>
+
+**色温**（像素）
+
+<p align="center">
+  <img src="assets/filters/color-temp.png" alt="色温" width="1280">
+</p>
+
+**像素化**（像素）
+
+<p align="center">
+  <img src="assets/filters/pixelation.png" alt="像素化" width="1280">
+</p>
+
+**RGB 荧光粉遮罩**（像素）
+
+<p align="center">
+  <img src="assets/filters/rgb-mask.png" alt="RGB 荧光粉遮罩" width="1280">
+</p>
+
+**水平波纹**（信号）
+
+<p align="center">
+  <img src="assets/filters/ripple.png" alt="水平波纹" width="1280">
+</p>
+
+**隔行扫描抖动**（信号）
+
+<p align="center">
+  <img src="assets/filters/jitter.png" alt="隔行扫描抖动" width="1280">
+</p>
+
+**荧光粉余晖**（信号）
+
+<p align="center">
+  <img src="assets/filters/persistence.png" alt="荧光粉余晖" width="1280">
+</p>
 
 ### 插件界面
 
