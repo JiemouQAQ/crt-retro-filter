@@ -1,0 +1,48 @@
+name: Build & Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch: {}
+
+permissions:
+  contents: write
+  actions: write
+
+jobs:
+  build-and-release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Package extension
+        shell: bash
+        run: |
+          set -euo pipefail
+          VERSION="$(jq -r .version package.json)"
+          echo "Packaging CRT Retro Filter v${VERSION}"
+          STAGE="stage"
+          mkdir -p "${STAGE}"
+          cp -r main.lua package.json LICENSE filters ui utils "${STAGE}/"
+          cd "${STAGE}"
+          zip -r "../crt-retro-filter-${VERSION}.aseprite-extension" *
+          cd ..
+          echo "--- built artifact ---"
+          ls -la crt-retro-filter-*.aseprite-extension
+          echo "--- contents ---"
+          unzip -l crt-retro-filter-*.aseprite-extension | head -40
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: crt-retro-filter-${{ github.ref_name }}
+          path: crt-retro-filter-*.aseprite-extension
+
+      - name: Create GitHub Release
+        if: startsWith(github.ref, 'refs/tags/')
+        uses: softprops/action-gh-release@v2
+        with:
+          files: crt-retro-filter-*.aseprite-extension
+          generate_release_notes: true
