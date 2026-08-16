@@ -24,28 +24,13 @@ function Scanlines.apply(image, params)
   -- Convert intensity 0-100 to opacity 0.0-1.0 for the darkening
   local darken = intensity / 100.0
 
-  if not ColorUtils.isRGB(image) then
-    -- For non-RGB, simple darkening
-    local w = image.width
-    local h = image.height
-    for it in image:pixels() do
-      local row = it.y
-      local band = math.floor((row - offset) / thickness)
-      if band % 2 == 0 then
-        local pixel = it()
-        local r, g, b, a = ColorUtils.getRGBA(pixel)
-        it(ColorUtils.makeRGBA(r * darken, g * darken, b * darken, a))
-      end
-    end
-  else
-    for it in image:pixels() do
-      local row = it.y
-      local band = math.floor((row - offset) / thickness)
-      if band % 2 == 0 then
-        local pixel = it()
-        local r, g, b, a = ColorUtils.getRGBA(pixel)
-        it(ColorUtils.makeRGBA(r * darken, g * darken, b * darken, a))
-      end
+  for it in image:pixels() do
+    local row = it.y
+    local band = math.floor((row - offset) / thickness)
+    if band % 2 == 0 then
+      local pixel = it()
+      local r, g, b, a = ColorUtils.getRGBA(pixel)
+      it(ColorUtils.makeRGBA(r * darken, g * darken, b * darken, a))
     end
   end
 end

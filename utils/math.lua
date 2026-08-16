@@ -37,6 +37,15 @@ function MathUtils.gaussianKernel(radius, sigma)
   return kernel
 end
 
+-- Seed the global RNG once with high-entropy state.
+-- os.time() alone is second-precision: re-seeding it on every click within
+-- the same second yields identical random sequences, so we mix in
+-- sub-second CPU clock entropy. Call once at plugin init.
+function MathUtils.seedRandom()
+  local entropy = os.time() * 1000 + (math.floor(os.clock() * 1000) % 1000)
+  math.randomseed(entropy)
+end
+
 -- Fast pseudo-random hash returning [0, 1) from integer coordinates
 -- Uses Knuth multiplicative hash, pure integer arithmetic (no bit32 needed)
 function MathUtils.fastHash(x, y, seed)

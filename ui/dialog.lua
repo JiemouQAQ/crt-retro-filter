@@ -320,6 +320,61 @@ function DialogUI.applyFilters(image, params)
 end
 
 -- ============================================================
+-- Generate a random filter configuration.
+-- Shared by the dialog's Randomize button and the Randomize
+-- menu command (main.lua) so they can never drift apart.
+-- ============================================================
+function DialogUI.generateRandomParams()
+  local r = {
+    scanlines_enabled = math.random() > 0.5,
+    scanlines_intensity = math.random(30, 100),
+    scanlines_thickness = math.random(1, 3),
+    scanlines_offset = math.random(0, 1),
+    curvature_enabled = math.random() > 0.5,
+    curvature_amount = math.random(-100, 100),
+    curvature_corner_radius = math.random(0, 15),
+    aberration_enabled = math.random() > 0.5,
+    aberration_shift_r = math.random(-5, 5),
+    aberration_shift_b = math.random(-5, 5),
+    aberration_falloff = math.random(0, 100),
+    vignette_enabled = math.random() > 0.5,
+    vignette_intensity = math.random(0, 60),
+    vignette_radius = math.random(20, 80),
+    vignette_softness = math.random(20, 80),
+    vignette_ratio = ({"auto", "1:1", "4:3", "16:9"})[math.random(1, 4)],
+    bloom_enabled = math.random() > 0.5,
+    bloom_threshold = math.random(80, 200),
+    bloom_radius = math.random(1, 5),
+    bloom_intensity = math.random(0, 60),
+    noise_enabled = math.random() > 0.5,
+    noise_intensity = math.random(0, 30),
+    noise_grain_size = math.random(1, 3),
+    noise_monochrome = math.random() > 0.5,
+    color_temp_enabled = math.random() > 0.5,
+    color_temp_value = math.random(3000, 9000),
+    color_temp_intensity = math.random(10, 80),
+    pixelation_enabled = math.random() > 0.5,
+    pixelation_block_size = math.random(2, 6),
+    rgb_mask_enabled = math.random() > 0.5,
+    rgb_mask_intensity = math.random(10, 60),
+    rgb_mask_type = ({"grille", "shadow", "slot"})[math.random(1, 3)],
+    rgb_mask_width = math.random(1, 3),
+    ripple_enabled = math.random() > 0.5,
+    ripple_amplitude = math.random(1, 5),
+    ripple_frequency = math.random(10, 60),
+    ripple_phase = math.random(0, 360),
+    ripple_falloff = math.random(0, 100),
+    jitter_enabled = math.random() > 0.5,
+    jitter_intensity = math.random(5, 40),
+    jitter_direction = math.random() > 0.5 and "horizontal" or "vertical",
+    persistence_enabled = math.random() > 0.5,
+    persistence_intensity = math.random(10, 50),
+    persistence_threshold = math.random(100, 200),
+  }
+  return r
+end
+
+-- ============================================================
 -- Build and show the dialog
 -- ============================================================
 function DialogUI.show(plugin)
@@ -718,53 +773,7 @@ function DialogUI.show(plugin)
   dlg:separator{}
   dlg:button{ id = "randomize", text = T.randomize_btn, hexpand = false,
     onclick = function()
-      math.randomseed(os.time())
-      local r = {
-        scanlines_enabled = math.random() > 0.5,
-        scanlines_intensity = math.random(30, 100),
-        scanlines_thickness = math.random(1, 3),
-        scanlines_offset = math.random(0, 1),
-        curvature_enabled = math.random() > 0.5,
-        curvature_amount = math.random(-100, 100),
-        curvature_corner_radius = math.random(0, 15),
-        aberration_enabled = math.random() > 0.5,
-        aberration_shift_r = math.random(-5, 5),
-        aberration_shift_b = math.random(-5, 5),
-        aberration_falloff = math.random(0, 100),
-        vignette_enabled = math.random() > 0.5,
-        vignette_intensity = math.random(0, 60),
-        vignette_radius = math.random(20, 80),
-        vignette_softness = math.random(20, 80),
-        vignette_ratio = ({"auto", "1:1", "4:3", "16:9"})[math.random(1, 4)],
-        bloom_enabled = math.random() > 0.5,
-        bloom_threshold = math.random(80, 200),
-        bloom_radius = math.random(1, 5),
-        bloom_intensity = math.random(0, 60),
-        noise_enabled = math.random() > 0.5,
-        noise_intensity = math.random(0, 30),
-        noise_grain_size = math.random(1, 3),
-        noise_monochrome = math.random() > 0.5,
-        color_temp_enabled = math.random() > 0.5,
-        color_temp_value = math.random(3000, 9000),
-        color_temp_intensity = math.random(10, 80),
-        pixelation_enabled = math.random() > 0.5,
-        pixelation_block_size = math.random(2, 6),
-        rgb_mask_enabled = math.random() > 0.5,
-        rgb_mask_intensity = math.random(10, 60),
-        rgb_mask_type = ({"grille", "shadow", "slot"})[math.random(1, 3)],
-        rgb_mask_width = math.random(1, 3),
-        ripple_enabled = math.random() > 0.5,
-        ripple_amplitude = math.random(1, 5),
-        ripple_frequency = math.random(10, 60),
-        ripple_phase = math.random(0, 360),
-        ripple_falloff = math.random(0, 100),
-        jitter_enabled = math.random() > 0.5,
-        jitter_intensity = math.random(5, 40),
-        jitter_direction = math.random() > 0.5 and "horizontal" or "vertical",
-        persistence_enabled = math.random() > 0.5,
-        persistence_intensity = math.random(10, 50),
-        persistence_threshold = math.random(100, 200),
-      }
+      local r = DialogUI.generateRandomParams()
 
       -- Update params and dialog controls
       for k, v in pairs(r) do
