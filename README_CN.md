@@ -43,12 +43,12 @@
 
 ## 效果展示
 
-> 📷 **占位图说明**：以下图片为占位图，替换为真实效果截图时只需覆盖 `assets/` 目录下同名文件，无需修改 README。
+> 📷 以下均为真实效果截图：原图为 1280×720 像素画作品，依次应用各预设与单个滤镜所得。
 
 ### 原图
 
 <p align="center">
-  <img src="assets/showcase/original.png" alt="原图（占位）" width="360">
+  <img src="assets/showcase/original.png" alt="原图" width="360">
 </p>
 
 ### 九套预设效果
@@ -65,7 +65,27 @@
 | --- | --- | --- |
 | <img src="assets/showcase/preset-trinitron.png" alt="特丽珑" width="240"> | <img src="assets/showcase/preset-pixel-perfect.png" alt="像素完美" width="240"> | <img src="assets/showcase/preset-heavy-glitch.png" alt="重度故障" width="240"> |
 
+### 单滤镜效果
+
+| 像素化 | 屏幕弧度 | 色差 |
+| --- | --- | --- |
+| <img src="assets/filters/pixelation.png" alt="像素化" width="240"> | <img src="assets/filters/curvature.png" alt="屏幕弧度" width="240"> | <img src="assets/filters/aberration.png" alt="色差" width="240"> |
+
+| 水平波纹 | 隔行扫描抖动 | 扫描线 |
+| --- | --- | --- |
+| <img src="assets/filters/ripple.png" alt="水平波纹" width="240"> | <img src="assets/filters/jitter.png" alt="隔行扫描抖动" width="240"> | <img src="assets/filters/scanlines.png" alt="扫描线" width="240"> |
+
+| RGB 荧光粉遮罩 | 辉光 | 荧光粉余晖 |
+| --- | --- | --- |
+| <img src="assets/filters/rgb-mask.png" alt="RGB 荧光粉遮罩" width="240"> | <img src="assets/filters/bloom.png" alt="辉光" width="240"> | <img src="assets/filters/persistence.png" alt="荧光粉余晖" width="240"> |
+
+| 暗角 | 色温 | 噪点 |
+| --- | --- | --- |
+| <img src="assets/filters/vignette.png" alt="暗角" width="240"> | <img src="assets/filters/color-temp.png" alt="色温" width="240"> | <img src="assets/filters/noise.png" alt="噪点" width="240"> |
+
 ### 插件界面
+
+> 🖼️ 该图片为占位图，稍后替换为实际界面截图。
 
 <p align="center">
   <img src="assets/dialog.png" alt="插件对话框（占位）" width="480">

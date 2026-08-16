@@ -43,12 +43,12 @@ Render your pixel art through the lens of a classic CRT display. 12 independent 
 
 ## Showcase
 
-> 📷 **Placeholder note**: The images below are placeholders. To add real screenshots, simply overwrite the files with the same names under `assets/` — no README changes needed.
+> 📷 All screenshots are real output: a 1280×720 pixel-art original with each preset and individual filter applied.
 
 ### Original
 
 <p align="center">
-  <img src="assets/showcase/original.png" alt="Original (placeholder)" width="360">
+  <img src="assets/showcase/original.png" alt="Original" width="360">
 </p>
 
 ### Preset Gallery
@@ -65,7 +65,27 @@ Render your pixel art through the lens of a classic CRT display. 12 independent 
 | --- | --- | --- |
 | <img src="assets/showcase/preset-trinitron.png" alt="Trinitron" width="240"> | <img src="assets/showcase/preset-pixel-perfect.png" alt="Pixel Perfect" width="240"> | <img src="assets/showcase/preset-heavy-glitch.png" alt="Heavy Glitch" width="240"> |
 
+### Individual Filter Effects
+
+| Pixelation | Screen Curvature | Chromatic Aberration |
+| --- | --- | --- |
+| <img src="assets/filters/pixelation.png" alt="Pixelation" width="240"> | <img src="assets/filters/curvature.png" alt="Screen Curvature" width="240"> | <img src="assets/filters/aberration.png" alt="Chromatic Aberration" width="240"> |
+
+| Horizontal Ripple | Interlacing Jitter | Scanlines |
+| --- | --- | --- |
+| <img src="assets/filters/ripple.png" alt="Horizontal Ripple" width="240"> | <img src="assets/filters/jitter.png" alt="Interlacing Jitter" width="240"> | <img src="assets/filters/scanlines.png" alt="Scanlines" width="240"> |
+
+| RGB Phosphor Mask | Bloom / Glow | Phosphor Persistence |
+| --- | --- | --- |
+| <img src="assets/filters/rgb-mask.png" alt="RGB Phosphor Mask" width="240"> | <img src="assets/filters/bloom.png" alt="Bloom / Glow" width="240"> | <img src="assets/filters/persistence.png" alt="Phosphor Persistence" width="240"> |
+
+| Vignette | Color Temperature | Noise / Static |
+| --- | --- | --- |
+| <img src="assets/filters/vignette.png" alt="Vignette" width="240"> | <img src="assets/filters/color-temp.png" alt="Color Temperature" width="240"> | <img src="assets/filters/noise.png" alt="Noise / Static" width="240"> |
+
 ### Plugin Dialog
+
+> 🖼️ This image is a placeholder and will be replaced with a real dialog screenshot.
 
 <p align="center">
   <img src="assets/dialog.png" alt="Plugin dialog (placeholder)" width="480">
