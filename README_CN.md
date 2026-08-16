@@ -1,4 +1,5 @@
 # CRT 复古滤镜 for Aseprite
+<img width="1280" height="640" alt="0803a-export" src="https://github.com/user-attachments/assets/33e2ee76-b295-4877-8007-48463ac59aab" />
 
 > [English Documentation](README.md)
 
