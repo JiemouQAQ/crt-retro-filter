@@ -185,10 +185,8 @@ Render your pixel art through the lens of a classic CRT display. 12 independent 
 
 ### Plugin Dialog
 
-> 🖼️ This image is a placeholder and will be replaced with a real dialog screenshot.
-
 <p align="center">
-  <img src="assets/dialog.png" alt="Plugin dialog (placeholder)" width="480">
+  <img src="assets/dialog-en.png" alt="Plugin dialog (English interface)" width="480">
 </p>
 
 ## Installation

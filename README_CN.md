@@ -185,10 +185,8 @@
 
 ### 插件界面
 
-> 🖼️ 该图片为占位图，稍后替换为实际界面截图。
-
 <p align="center">
-  <img src="assets/dialog.png" alt="插件对话框（占位）" width="480">
+  <img src="assets/dialog-cn.png" alt="插件对话框（中文界面）" width="480">
 </p>
 
 ## 安装
