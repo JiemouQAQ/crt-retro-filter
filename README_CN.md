@@ -22,7 +22,7 @@
 
 ## 安装
 
-1. 从 [Releases](https://github.com/your-org/crt-retro-filter/releases) 下载最新的 `.aseprite-extension` 文件
+1. 从 [Releases](https://github.com/JiemouQAQ/crt-retro-filter/releases) 下载最新的 `.aseprite-extension` 文件
 2. 双击文件安装，或通过 **编辑 → 首选项 → 扩展 → 添加扩展** 手动安装
 3. 重启 Aseprite 或点击 **重新加载脚本**
 

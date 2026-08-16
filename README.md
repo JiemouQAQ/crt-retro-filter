@@ -22,7 +22,7 @@ Render your pixel art through the lens of a classic CRT display. 12 independent 
 
 ## Installation
 
-1. Download the latest `.aseprite-extension` file from [Releases](https://github.com/your-org/crt-retro-filter/releases)
+1. Download the latest `.aseprite-extension` file from [Releases](https://github.com/JiemouQAQ/crt-retro-filter/releases)
 2. Double-click the file, or install via **Edit → Preferences → Extensions → Add Extension** in Aseprite
 3. Restart Aseprite or click **Reload Scripts**
 
