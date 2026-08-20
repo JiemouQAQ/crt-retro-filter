@@ -30,7 +30,7 @@ local ColorUtils = require("utils.color")
 local DialogUI = {}
 
 -- Displayed in the dialog title; keep in sync with package.json
-local PLUGIN_VERSION = "3.9.0"
+local PLUGIN_VERSION = "3.9.1"
 
 -- ============================================================
 -- Preview state
@@ -566,7 +566,8 @@ function DialogUI.show(plugin)
   previewImg = DialogUI.applyFilters(previewImg, params)
 
   -- Canvas = preview image size + margin (auto-adjusts to image aspect ratio)
-  local margin = 12
+  -- Thin margin keeps the black frame around the preview subtle.
+  local margin = 4
   local canvasW = originalPreview.width + margin * 2
   local canvasH = originalPreview.height + margin * 2
 
@@ -585,7 +586,7 @@ function DialogUI.show(plugin)
     autoscaling = true,
     onpaint = function(ev)
       local gc = ev.context
-      gc:fillRect(Rectangle(0, 0, canvasW, canvasH), app.pixelColor.rgba(12, 12, 18, 255))
+      gc:fillRect(Rectangle(0, 0, canvasW, canvasH), app.pixelColor.rgba(24, 26, 36, 255))
       local showOriginal = compareLock or compareHold
       local img = showOriginal and originalPreview or previewImg
       if img then
@@ -619,6 +620,8 @@ function DialogUI.show(plugin)
       dlg:repaint()
     end
   }
+  -- Performance note right under the preview compare controls
+  dlg:label{ text = "  " .. T.perf_note }
 
   -- ===== Real-time preview update with change detection =====
 	-- Restore original preview pixels outside the selection.
@@ -729,7 +732,6 @@ function DialogUI.show(plugin)
   }
   dlg:check{ id = "all_frames", label = T.all_frames, selected = prefs.all_frames or false }
   dlg:check{ id = "anim_enabled", label = T.anim_evolution, selected = prefs.anim_enabled or false }
-  dlg:label{ text = "  " .. T.perf_note }
 
   -- Disable All / Reset Default on one row
   dlg:newrow()

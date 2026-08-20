@@ -5,6 +5,13 @@ All notable changes to the CRT Retro Filter extension.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [3.9.1] - 2026-02
+
+### Changed
+- Compare Original hint shortened to "(left-click to compare / 可左键对比)"
+- Performance note moved from the Presets tab to directly under the preview compare checkbox
+- Preview canvas margin reduced (12 → 4 px) and background lightened for a subtler frame
+
 ## [3.9.0] - 2026-02
 
 ### Added

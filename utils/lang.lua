@@ -42,7 +42,7 @@ local strings = {
     anim_evolution = "Per-Frame Evolution:",
     no_selection = "No active selection. Create a selection first, or uncheck Selection Only.",
     compare_orig = "Compare Original",
-    compare_hint = "hold the mouse button to peek",
+    compare_hint = "left-click to compare",
 
     -- Preset descriptions
     preset_arcade_name = "Classic Arcade",
@@ -150,7 +150,7 @@ local strings = {
     txn_single = "CRT Retro Filter",
 
     -- Progress / errors
-    perf_note = "Heavy jobs (all frames / large canvases) take a while — please wait, do not interrupt.",
+    perf_note = "All-frames / large-canvas jobs take a while — please wait, do not interrupt.",
     task_too_heavy = "This task is too heavy for your machine and was stopped before starting.\n\nSuggested fixes:\n- Use a smaller canvas or fewer animation frames\n- Enable fewer filters\n- Lower the Preset Strength",
     operation_failed = "The operation failed and was rolled back (no changes were applied).\n\nError details:",
   },
@@ -191,7 +191,7 @@ local strings = {
     anim_evolution = "逐帧演变:",
     no_selection = "没有活动的选区，请先创建选区，或取消勾选「只应用到选区」。",
     compare_orig = "对比原图",
-    compare_hint = "按住鼠标左键可临时查看",
+    compare_hint = "可左键对比",
 
     -- Preset descriptions
     preset_arcade_name = "经典街机",
@@ -299,7 +299,7 @@ local strings = {
     txn_single = "CRT 复古滤镜",
 
     -- Progress / errors
-    perf_note = "全部帧 / 大画布应用较耗时，请耐心等待，勿中断。",
+    perf_note = "全部帧、大画布应用耗时较长，请耐心等待，勿中断。",
     task_too_heavy = "任务对当前计算机来说过重，已主动终止（未做任何改动）。\n\n建议：\n- 缩小画布或减少动画帧数\n- 减少启用的滤镜数量\n- 降低「预设强度」",
     operation_failed = "处理失败，已自动回滚（未做任何改动）。\n\n错误详情：",
   },
