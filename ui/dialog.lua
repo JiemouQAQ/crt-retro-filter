@@ -30,7 +30,7 @@ local ColorUtils = require("utils.color")
 local DialogUI = {}
 
 -- Displayed in the dialog title; keep in sync with package.json
-local PLUGIN_VERSION = "3.10.1"
+local PLUGIN_VERSION = "3.10.0"
 
 -- ============================================================
 -- Preview state
@@ -452,7 +452,7 @@ function DialogUI.generateRandomParams()
     scanlines_thickness = math.random(1, 3),
     scanlines_offset = math.random(0, 1),
     curvature_enabled = math.random() > 0.5,
-    curvature_amount = math.random(0, 100),
+    curvature_amount = math.random(-100, 100),
     curvature_corner_radius = math.random(0, 15),
     aberration_enabled = math.random() > 0.5,
     aberration_shift_r = math.random(-5, 5),
@@ -855,7 +855,7 @@ function DialogUI.show(plugin)
   dlg:separator{ text = T.sep_curvature }
   dlg:check{ id = "curvature_enabled", label = T.enable, selected = params.curvature_enabled,
     onclick = function() updatePreview() end }
-  dlg:slider{ id = "curvature_amount", label = T.curvature, min = 0, max = 100, value = params.curvature_amount, hexpand = true,
+  dlg:slider{ id = "curvature_amount", label = T.curvature, min = -100, max = 100, value = params.curvature_amount, hexpand = true,
     onchange = function() updatePreview() end }
   dlg:slider{ id = "curvature_corner_radius", label = T.corner, min = 0, max = 100, value = params.curvature_corner_radius, hexpand = true,
     onchange = function() updatePreview() end }

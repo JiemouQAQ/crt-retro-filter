@@ -27,7 +27,7 @@ Render your pixel art through the lens of a classic CRT display. 18 independent 
 
 ## Features
 
-- **18 CRT Filters** — Scanlines, Screen Curvature (concave), Chromatic Aberration, Phosphor Bloom, Vignette, Signal Noise, Color Temperature, Pixelation, RGB Phosphor Mask, Horizontal Ripple, Interlacing Jitter, Phosphor Persistence, plus glitch art: Slice Shift, Block Corruption, Pixel Sorting, VHS Tracking Band, Displacement, Mirror Tear
+- **18 CRT Filters** — Scanlines, Screen Curvature (convex/concave), Chromatic Aberration, Phosphor Bloom, Vignette, Signal Noise, Color Temperature, Pixelation, RGB Phosphor Mask, Horizontal Ripple, Interlacing Jitter, Phosphor Persistence, plus glitch art: Slice Shift, Block Corruption, Pixel Sorting, VHS Tracking Band, Displacement, Mirror Tear
 - **Glitch Art Tabs** — two tabs with 6 deterministic filters (Data Glitch: Slice Shift / Block Corruption / Pixel Sorting; Signal Glitch: VHS Tracking Band / Displacement / Mirror Tear): identical parameters always produce identical output, so *Apply to All Frames* keeps glitch patterns stable across animation frames
 - **Real-time Preview** — See changes instantly as you adjust parameters, powered by an on-canvas preview with change detection for performance
 - **Before/After Compare** — Toggle or hold the preview canvas to switch between the filtered result and the original
@@ -332,11 +332,11 @@ Simulates the horizontal dark lines created by CRT interlaced scanning. Alternat
 | Interlace Flicker | on/off | Alternate the darkened rows every frame (CRT shimmer, for animations) |
 
 ### Screen Curvature
-Simulates the concave screen surface of a CRT tube: the picture is gently pinched inward. The filter strictly preserves the canvas size and aspect ratio — no cropping and no transparent holes.
+Simulates the spherical curvature of a CRT tube. Supports both convex (positive) and concave (negative) curvature.
 
 | Parameter | Range | Description |
 |-----------|-------|-------------|
-| Curvature | 0–100 | Inward depth (0 = flat, 100 = deepest) |
+| Curvature | -100–100 | Bend amount (negative = concave, positive = convex) |
 | Corner Radius | 0–100 | Rounded corner radius |
 
 ### Chromatic Aberration
@@ -570,7 +570,7 @@ crt-retro-filter/
 ├── main.lua                  # Entry point: command & menu registration
 ├── filters/
 │   ├── scanlines.lua         # Scanlines
-│   ├── curvature.lua         # Screen curvature (concave)
+│   ├── curvature.lua         # Screen curvature (convex/concave)
 │   ├── aberration.lua        # Chromatic aberration
 │   ├── bloom.lua             # Phosphor bloom / glow
 │   ├── vignette.lua          # Vignette
