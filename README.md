@@ -113,7 +113,7 @@ Render your pixel art through the lens of a classic CRT display. 18 independent 
 **Digital Glitch** — Classic glitch art: pixel sorting, slice tearing, data corruption
 
 <p align="center">
-  <img src="assets/showcase/preset-glitch-digital.png" alt="Digital Glitch" width="1280">
+  <img width="1920" height="1080" alt="Digital Glitch" src="https://github.com/user-attachments/assets/56d663a5-12b3-40cd-b67c-fb2dbf14c79e" />
 </p>
 
 ### Individual Filter Effects
@@ -195,37 +195,37 @@ Render your pixel art through the lens of a classic CRT display. 18 independent 
 **Slice Shift** (Data Glitch)
 
 <p align="center">
-  <img src="assets/filters/slice-shift.png" alt="Slice Shift" width="1280">
+  <img width="1920" height="1080" alt="Slice Shift" src="https://github.com/user-attachments/assets/a33528d0-7c9b-4644-8200-e1d039588b55" />
 </p>
 
 **Block Corruption** (Data Glitch)
 
 <p align="center">
-  <img src="assets/filters/block-corruption.png" alt="Block Corruption" width="1280">
+  <img width="1920" height="1080" alt="Block Corruption" src="https://github.com/user-attachments/assets/d5d20ed5-af20-4bc3-b967-4d39006e37ff" />
 </p>
 
 **Pixel Sorting** (Data Glitch)
 
 <p align="center">
-  <img src="assets/filters/pixel-sorting.png" alt="Pixel Sorting" width="1280">
+  <img width="1920" height="1080" alt="Pixel Sorting" src="https://github.com/user-attachments/assets/bd3e4b0a-156a-457f-8588-dea3337af102" />
 </p>
 
 **VHS Tracking Band** (Signal Glitch)
 
 <p align="center">
-  <img src="assets/filters/tracking-band.png" alt="VHS Tracking Band" width="1280">
+  <img width="1920" height="1080" alt="VHS Tracking Band" src="https://github.com/user-attachments/assets/db7d464f-e0e7-467e-addf-57078d49196e" />
 </p>
 
 **Displacement** (Signal Glitch)
 
 <p align="center">
-  <img src="assets/filters/displacement.png" alt="Displacement" width="1280">
+  <img width="1920" height="1080" alt="Displacement" src="https://github.com/user-attachments/assets/ced12082-b519-41db-a9c9-b86e4aee6b51" />
 </p>
 
 **Mirror Tear** (Signal Glitch)
 
 <p align="center">
-  <img src="assets/filters/mirror-tear.png" alt="Mirror Tear" width="1280">
+  <img width="1920" height="1080" alt="Mirror Tear" src="https://github.com/user-attachments/assets/208227c0-bf57-43ec-95ea-01fc3441c557" />
 </p>
 
 ### Plugin Dialog
