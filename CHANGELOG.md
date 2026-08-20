@@ -5,6 +5,15 @@ All notable changes to the CRT Retro Filter extension.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [3.6.0] - 2026-02
+
+### Added
+- **Mirror Tear** (镜像撕裂) filter: selected strips are reflected (left-right / top-bottom), 17 → 18 filters total
+- Glitch tab split into two tabs (17 → 18 filter count, 6 → 7 tabs total):
+  - **Data Glitch** (数据故障): Slice Shift, Block Corruption, Pixel Sorting
+  - **Signal Glitch** (信号故障): VHS Tracking Band, Displacement, Mirror Tear
+- **Heavy Glitch** preset now also stacks Mirror Tear
+
 ## [3.5.0] - 2026-02
 
 ### Added

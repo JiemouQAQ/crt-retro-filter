@@ -20,7 +20,8 @@ local strings = {
     tab_display = "Display",
     tab_pixel = "Pixel",
     tab_signal = "Signal",
-    tab_glitch = "Glitch",
+    tab_glitch_data = "Data Glitch",
+    tab_glitch_signal = "Signal Glitch",
 
     -- Presets tab
     preset_label = "Preset:",
@@ -132,6 +133,7 @@ local strings = {
     sep_pixel_sorting = "Pixel Sorting",
     sep_tracking_band = "VHS Tracking Band",
     sep_displacement = "Displacement",
+    sep_mirror_tear = "Mirror Tear",
     density = "Density:",
     shift_amount = "Shift:",
     band_width = "Band Width:",
@@ -160,7 +162,8 @@ local strings = {
     tab_display = "显示",
     tab_pixel = "像素",
     tab_signal = "信号",
-    tab_glitch = "故障",
+    tab_glitch_data = "数据故障",
+    tab_glitch_signal = "信号故障",
 
     -- Presets tab
     preset_label = "预设:",
@@ -272,6 +275,7 @@ local strings = {
     sep_pixel_sorting = "像素排序",
     sep_tracking_band = "VHS 跟踪条",
     sep_displacement = "置换扭曲",
+    sep_mirror_tear = "镜像撕裂",
     density = "密度:",
     shift_amount = "位移:",
     band_width = "条宽:",

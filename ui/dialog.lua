@@ -23,13 +23,14 @@ local BlockCorruption = require("filters.block_corruption")
 local PixelSorting = require("filters.pixel_sorting")
 local TrackingBand = require("filters.tracking_band")
 local Displacement = require("filters.displacement")
+local MirrorTear = require("filters.mirror_tear")
 local Lang = require("utils.lang")
 local ColorUtils = require("utils.color")
 
 local DialogUI = {}
 
 -- Displayed in the dialog title; keep in sync with package.json
-local PLUGIN_VERSION = "3.5.0"
+local PLUGIN_VERSION = "3.6.0"
 
 -- ============================================================
 -- Preview state
@@ -59,6 +60,7 @@ local defaults = {
   pixel_sorting_enabled = false, pixel_sorting_intensity = 70, pixel_sorting_threshold = 60, pixel_sorting_direction = "horizontal",
   tracking_band_enabled = false, tracking_band_intensity = 50, tracking_band_width = 4, tracking_band_position = 50,
   displacement_enabled = false, displacement_intensity = 30, displacement_scale = 60, displacement_direction = "both",
+  mirror_tear_enabled = false, mirror_tear_intensity = 50, mirror_tear_density = 40, mirror_tear_direction = "horizontal",
 }
 
 local paramKeys = {
@@ -79,6 +81,7 @@ local paramKeys = {
   "pixel_sorting_enabled", "pixel_sorting_intensity", "pixel_sorting_threshold", "pixel_sorting_direction",
   "tracking_band_enabled", "tracking_band_intensity", "tracking_band_width", "tracking_band_position",
   "displacement_enabled", "displacement_intensity", "displacement_scale", "displacement_direction",
+  "mirror_tear_enabled", "mirror_tear_intensity", "mirror_tear_density", "mirror_tear_direction",
   "global_strength",
 }
 
@@ -210,6 +213,7 @@ local presets = {
       pixel_sorting_enabled = true, pixel_sorting_intensity = 90, pixel_sorting_threshold = 40, pixel_sorting_direction = "horizontal",
       tracking_band_enabled = true, tracking_band_intensity = 60, tracking_band_width = 6, tracking_band_position = 30,
       displacement_enabled = true, displacement_intensity = 40, displacement_scale = 60, displacement_direction = "both",
+      mirror_tear_enabled = true, mirror_tear_intensity = 60, mirror_tear_density = 50, mirror_tear_direction = "horizontal",
     }
   },
   {
@@ -282,7 +286,7 @@ local function syncParams(dlg, params)
           or (v == "Slot Mask" or v == "槽状遮罩") and "slot" or "grille"
       elseif k == "jitter_direction" then
         params[k] = (v == "Vertical" or v == "垂直") and "vertical" or "horizontal"
-      elseif k == "pixel_sorting_direction" or k == "displacement_direction" then
+      elseif k == "pixel_sorting_direction" or k == "displacement_direction" or k == "mirror_tear_direction" then
         if v == "Both" or v == "双向" then
           params[k] = "both"
         elseif v == "Vertical" or v == "垂直" then
@@ -319,7 +323,7 @@ local function applyPresetToDialog(dlg, preset_params, params, T)
     elseif k == "jitter_direction" then
       local label = (v == "vertical") and T.dir_vertical or T.dir_horizontal
       pcall(function() dlg:modify{ id = k, text = label } end)
-    elseif k == "pixel_sorting_direction" or k == "displacement_direction" then
+    elseif k == "pixel_sorting_direction" or k == "displacement_direction" or k == "mirror_tear_direction" then
       local label = (v == "vertical") and T.dir_vertical or (v == "both") and T.dir_both or T.dir_horizontal
       pcall(function() dlg:modify{ id = k, text = label } end)
     elseif k == "vignette_ratio" then
@@ -407,6 +411,9 @@ function DialogUI.applyFilters(image, params)
   end
   if params.displacement_enabled then
     Displacement.apply(img, params)
+  end
+  if params.mirror_tear_enabled then
+    MirrorTear.apply(img, params)
   end
 
   -- Blend the filtered result back toward the pristine original snapshot
@@ -502,6 +509,10 @@ function DialogUI.generateRandomParams()
     displacement_intensity = math.random(10, 60),
     displacement_scale = math.random(20, 100),
     displacement_direction = ({"horizontal", "vertical", "both"})[math.random(1, 3)],
+    mirror_tear_enabled = math.random() > 0.5,
+    mirror_tear_intensity = math.random(20, 80),
+    mirror_tear_density = math.random(20, 70),
+    mirror_tear_direction = math.random() > 0.5 and "horizontal" or "vertical",
   }
   return r
 end
@@ -970,8 +981,8 @@ function DialogUI.show(plugin)
   dlg:slider{ id = "persistence_threshold", label = T.threshold, min = 0, max = 255, value = params.persistence_threshold, hexpand = true,
     onchange = function() updatePreview() end }
 
-  -- ===== Tab: Glitch =====
-  dlg:tab{ id = "tab_glitch", text = T.tab_glitch }
+  -- ===== Tab: Glitch (Data) =====
+  dlg:tab{ id = "tab_glitch_data", text = T.tab_glitch_data }
 
   dlg:separator{ text = T.sep_slice_shift }
   dlg:check{ id = "slice_shift_enabled", label = T.enable, selected = params.slice_shift_enabled,
@@ -1013,6 +1024,9 @@ function DialogUI.show(plugin)
     end
   }
 
+  -- ===== Tab: Glitch (Signal) =====
+  dlg:tab{ id = "tab_glitch_signal", text = T.tab_glitch_signal }
+
   dlg:separator{ text = T.sep_tracking_band }
   dlg:check{ id = "tracking_band_enabled", label = T.enable, selected = params.tracking_band_enabled,
     onclick = function() updatePreview() end }
@@ -1044,6 +1058,26 @@ function DialogUI.show(plugin)
     end
   }
 
+  dlg:separator{ text = T.sep_mirror_tear }
+  dlg:check{ id = "mirror_tear_enabled", label = T.enable, selected = params.mirror_tear_enabled,
+    onclick = function() updatePreview() end }
+  dlg:slider{ id = "mirror_tear_intensity", label = T.intensity, min = 0, max = 100, value = params.mirror_tear_intensity, hexpand = true,
+    onchange = function() updatePreview() end }
+  dlg:slider{ id = "mirror_tear_density", label = T.density, min = 0, max = 100, value = params.mirror_tear_density, hexpand = true,
+    onchange = function() updatePreview() end }
+  dlg:combobox{
+    id = "mirror_tear_direction",
+    label = T.direction,
+    option = (params.mirror_tear_direction == "vertical") and T.dir_vertical or T.dir_horizontal,
+    options = { T.dir_horizontal, T.dir_vertical },
+    hexpand = true,
+    onchange = function()
+      local v = dlg.data.mirror_tear_direction
+      params.mirror_tear_direction = (v == T.dir_vertical) and "vertical" or "horizontal"
+      updatePreview()
+    end
+  }
+
   dlg:endtabs{ selected = "tab_presets" }
 
   -- ===== Buttons =====
@@ -1061,7 +1095,7 @@ function DialogUI.show(plugin)
         elseif k == "jitter_direction" then
           local label = (v == "vertical") and T.dir_vertical or T.dir_horizontal
           pcall(function() dlg:modify{ id = k, text = label } end)
-        elseif k == "pixel_sorting_direction" or k == "displacement_direction" then
+        elseif k == "pixel_sorting_direction" or k == "displacement_direction" or k == "mirror_tear_direction" then
           local label = (v == "vertical") and T.dir_vertical or (v == "both") and T.dir_both or T.dir_horizontal
           pcall(function() dlg:modify{ id = k, text = label } end)
         elseif k == "vignette_ratio" then
