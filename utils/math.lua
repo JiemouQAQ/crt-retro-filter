@@ -46,6 +46,17 @@ function MathUtils.seedRandom()
   math.randomseed(entropy)
 end
 
+-- Per-frame animation seed offset.
+-- Returns 0 when "per-frame evolution" is off (or there is no frame
+-- context), otherwise the frame number times a per-filter multiplier.
+-- Multipliers differ per filter so their patterns decorrelate per frame.
+function MathUtils.animSeed(params, multiplier)
+  if params.anim_enabled and params._frame then
+    return params._frame * multiplier
+  end
+  return 0
+end
+
 -- Fast pseudo-random hash returning [0, 1) from integer coordinates
 -- Uses Knuth multiplicative hash, pure integer arithmetic (no bit32 needed)
 function MathUtils.fastHash(x, y, seed)

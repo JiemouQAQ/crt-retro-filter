@@ -21,6 +21,12 @@ function Scanlines.apply(image, params)
 
   if enabled == false then return end
 
+  -- Interlace flicker: when enabled, the darkened row set alternates
+  -- every frame (the classic CRT interlacing shimmer).
+  if params.scanlines_flicker and params._frame then
+    offset = (offset + params._frame) % 2
+  end
+
   -- Convert intensity 0-100 to a darkening factor 1.0..0.15:
   -- higher intensity = darker scanline rows (never fully black).
   local darken = 1.0 - (intensity / 100.0) * 0.85

@@ -50,7 +50,8 @@ function PixelSorting.apply(image, params)
   if w <= 0 or h <= 0 then return end
 
   local src = image:clone()
-  local seed = 987
+  local animOffset = MathUtils.animSeed(params, 193)
+  local seed = 987 + animOffset
 
   local function sortLine(get, set, n)
     local i = 0

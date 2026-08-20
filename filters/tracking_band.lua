@@ -28,8 +28,14 @@ function TrackingBand.apply(image, params)
   if w <= 1 or h <= 0 then return end
 
   local src = image:clone()
-  local seed1, seed2 = 555, 666
+  local animOffset = MathUtils.animSeed(params, 257)
+  local seed1, seed2 = 555 + animOffset, 666 + animOffset
   local center = math.floor(position / 100.0 * (h - 1))
+  -- In per-frame evolution mode the band scrolls down ~3 rows per frame,
+  -- mimicking the tape transport drift of a damaged VHS head.
+  if params.anim_enabled and params._frame then
+    center = (center + params._frame * 3) % h
+  end
   local half = width
   local maxDx = math.max(1, math.floor(intensity / 100.0 * w * 0.15))
   local noiseLevel = intensity / 100.0 * 40.0

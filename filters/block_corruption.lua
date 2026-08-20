@@ -28,9 +28,10 @@ function BlockCorruption.apply(image, params)
   if w <= 1 or h <= 0 then return end
 
   local src = image:clone()
+  local animOffset = MathUtils.animSeed(params, 131)
   local block = size * 4 -- visible block size in pixels
   local maxShift = math.max(1, math.floor(shift / 100.0 * w * 0.25))
-  local seed1, seed2 = 4242, 2424
+  local seed1, seed2 = 4242 + animOffset, 2424 + animOffset
 
   local cols = math.ceil(w / block)
   local rows = math.ceil(h / block)

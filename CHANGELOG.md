@@ -5,6 +5,17 @@ All notable changes to the CRT Retro Filter extension.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [3.7.0] - 2026-02
+
+### Added
+- **Per-Frame Evolution** (逐帧演变): deterministic per-frame animation support
+  - Noise and all 6 glitch filters (Slice Shift / Block Corruption / Pixel Sorting / VHS Tracking Band / Displacement / Mirror Tear) now derive their pattern seed from the frame number when enabled — fresh pattern every frame, fully reproducible
+  - VHS Tracking Band additionally scrolls its position down ~3 rows per frame (tape transport drift)
+  - Scanlines gain a separate **Interlace Flicker** toggle (alternate darkened rows per frame, classic CRT shimmer)
+  - Dialog preview computes with the current frame number (what you see is what that frame gets)
+  - Default off — existing behavior and saved settings are unaffected
+- Internal frame context (`params._frame` / `_frames` / `_prev`) passed through the filter chain during multi-frame apply, cleared afterwards; reserved for future frame-dependent effects (mechanism B/C)
+
 ## [3.6.2] - 2026-02
 
 ### Changed

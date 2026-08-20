@@ -30,7 +30,7 @@ local ColorUtils = require("utils.color")
 local DialogUI = {}
 
 -- Displayed in the dialog title; keep in sync with package.json
-local PLUGIN_VERSION = "3.6.2"
+local PLUGIN_VERSION = "3.7.0"
 
 -- ============================================================
 -- Preview state
@@ -61,6 +61,7 @@ local defaults = {
   tracking_band_enabled = false, tracking_band_intensity = 50, tracking_band_width = 4, tracking_band_position = 50,
   displacement_enabled = false, displacement_intensity = 30, displacement_scale = 60, displacement_direction = "both",
   mirror_tear_enabled = false, mirror_tear_intensity = 50, mirror_tear_density = 40, mirror_tear_direction = "horizontal",
+  anim_enabled = false, scanlines_flicker = false,
 }
 
 local paramKeys = {
@@ -82,6 +83,7 @@ local paramKeys = {
   "tracking_band_enabled", "tracking_band_intensity", "tracking_band_width", "tracking_band_position",
   "displacement_enabled", "displacement_intensity", "displacement_scale", "displacement_direction",
   "mirror_tear_enabled", "mirror_tear_intensity", "mirror_tear_density", "mirror_tear_direction",
+  "anim_enabled", "scanlines_flicker",
   "global_strength",
 }
 
@@ -658,7 +660,13 @@ function DialogUI.show(plugin)
 	  end
 
 	  previewImg = originalPreview:clone()
+	  -- Per-frame evolution preview: use the current frame number so the
+	  -- preview matches the exact frame the user is on.
+	  params._frame = cel.frame.frameNumber
+	  params._frames = app.activeSprite and #app.activeSprite.frames or 1
 	  previewImg = DialogUI.applyFilters(previewImg, params)
+	  params._frame = nil
+	  params._frames = nil
 	  applySelectionMask()
 	  dlg:repaint()
 	end
@@ -720,6 +728,7 @@ function DialogUI.show(plugin)
     end
   }
   dlg:check{ id = "all_frames", label = T.all_frames, selected = prefs.all_frames or false }
+  dlg:check{ id = "anim_enabled", label = T.anim_evolution, selected = prefs.anim_enabled or false }
 
   -- Disable All / Reset Default on one row
   dlg:newrow()
@@ -837,6 +846,8 @@ function DialogUI.show(plugin)
     onchange = function() updatePreview() end }
   dlg:slider{ id = "scanlines_thickness", label = T.thickness, min = 1, max = 4, value = params.scanlines_thickness, hexpand = true,
     onchange = function() updatePreview() end }
+  dlg:check{ id = "scanlines_flicker", label = T.scanlines_flicker, selected = params.scanlines_flicker,
+    onclick = function() updatePreview() end }
 
   dlg:separator{ text = T.sep_curvature }
   dlg:check{ id = "curvature_enabled", label = T.enable, selected = params.curvature_enabled,
@@ -1213,12 +1224,21 @@ function DialogUI.applyToActiveLayer(sprite, params, T, duplicate, selectionOnly
   end
 
   app.transaction(T.txn_single, function()
+    -- Per-frame animation context: expose the current frame number,
+    -- total frame count, and previous frame output to the filter chain
+    -- (mechanism A/B/C animation support). Cleared afterwards so saved
+    -- params are never polluted.
+    local totalFrames = #sprite.frames
     if duplicate then
       local newLayer = sprite:newLayer()
       newLayer.name = layer.name .. " CRT"
+      local prevImg = nil
       for _, f in ipairs(frameList) do
         local srcCel = layer:cel(f)
         if srcCel then
+          params._frame = f
+          params._frames = totalFrames
+          params._prev = prevImg
           local newCel = sprite:newCel(newLayer, f)
           newCel.image = srcCel.image:clone()
           newCel.position = srcCel.position
@@ -1226,19 +1246,28 @@ function DialogUI.applyToActiveLayer(sprite, params, T, duplicate, selectionOnly
           img = DialogUI.applyFilters(img, params)
           if selection then img = DialogUI.maskToSelection(img, srcCel.image, selection, newCel.position) end
           newCel.image = img
+          prevImg = img
         end
       end
     else
+      local prevImg = nil
       for _, f in ipairs(frameList) do
         local celF = layer:cel(f)
         if celF then
+          params._frame = f
+          params._frames = totalFrames
+          params._prev = prevImg
           local img = celF.image:clone()
           img = DialogUI.applyFilters(img, params)
           if selection then img = DialogUI.maskToSelection(img, celF.image, selection, celF.position) end
           celF.image = img
+          prevImg = img
         end
       end
     end
+    params._frame = nil
+    params._frames = nil
+    params._prev = nil
   end)
 
   app.refresh()

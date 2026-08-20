@@ -38,6 +38,7 @@ Render your pixel art through the lens of a classic CRT display. 18 independent 
 - **Duplicate Layer Option** — Optionally apply filters to a new layer, preserving the original
 - **Selection Support** — Apply filters to the selected area only, leaving pixels outside untouched
 - **Apply to All Frames** — Process every frame of the active layer in one click, grouped into a single undo step
+- **Per-Frame Evolution** — When enabled, noise and all 6 glitch filters change their pattern with the frame number (deterministic: rerunning the animation reproduces it exactly), the VHS tracking band scrolls, and Scanlines can add classic interlace flicker — dynamic glitch / film-grain animation via *Apply to All Frames*
 - **Bilingual** — Full English and Chinese (中文) interface, switchable in the dialog
 - **Quick Apply** — Re-apply last saved settings without opening the dialog
 - **Keyboard Shortcut** — Bind custom hotkeys to Quick Apply and Randomize (no defaults; e.g. `Ctrl+Shift+Q` / `Ctrl+Shift+R`)
@@ -264,7 +265,7 @@ The dialog is organized into seven tabs:
 
 | Tab | Contents |
 |-----|----------|
-| **Presets** | Preset selection, preset strength, language switch, duplicate layer option, selection-only option, apply-to-all-frames option, custom preset management, Randomize button |
+| **Presets** | Preset selection, preset strength, language switch, duplicate layer option, selection-only option, apply-to-all-frames option, per-frame evolution option, custom preset management, Randomize button |
 | **Screen** | Scanlines, Screen Curvature, Chromatic Aberration |
 | **Display** | Bloom / Glow, Vignette, Noise / Static |
 | **Pixel** | Color Temperature, Pixelation, RGB Phosphor Mask |
@@ -307,7 +308,9 @@ If no selection is active when checked, an alert is shown when you click **Apply
 
 Check **"Apply to All Frames"** to run the filter chain on **every frame** of the active layer (for animations), all grouped into a **single** undo step.
 
-Pair it with **Fixed Noise** in the Noise tab to keep the noise pattern identical across frames and avoid flicker while playing the animation.
+**Making animation**: also check **"Per-Frame Evolution"** — noise and glitch patterns now change with the frame number: Slice Shift / Block Corruption / Pixel Sorting / Displacement / Mirror Tear get a fresh pattern each frame, the VHS Tracking Band scrolls down, and Noise becomes film grain. All evolution is deterministic (rerunning the animation reproduces it exactly), and the dialog preview shows the **current frame**'s result. **Interlace Flicker** on the Scanlines filter can be enabled separately for the classic CRT shimmer.
+
+> Tip: to keep some filters static while others evolve, disable those filters or use **Fixed Noise**.
 
 ## Filter Reference
 
@@ -318,6 +321,7 @@ Simulates the horizontal dark lines created by CRT interlaced scanning. Alternat
 |-----------|-------|-------------|
 | Intensity | 0–100 | Scanline darkness (higher = darker) |
 | Thickness | 1–4 | Thickness in pixel rows |
+| Interlace Flicker | on/off | Alternate the darkened rows every frame (CRT shimmer, for animations) |
 
 ### Screen Curvature
 Simulates the spherical curvature of a CRT tube. Supports both convex (positive) and concave (negative) curvature.
@@ -363,6 +367,7 @@ Simulates analog signal noise and electrostatic interference.
 | Grain Size | 1–4 | Grain size in pixels |
 | Monochrome | on/off | Luminance-only noise (off = per-channel RGB noise) |
 | Fixed Noise | on/off | Use a constant noise pattern (stable when applied per animation frame) |
+| Per-Frame Evolution | on/off | With *Per-Frame Evolution* on, the noise pattern changes deterministically per frame (film grain) |
 
 ### Color Temperature
 Shifts the color balance toward warm (low Kelvin) or cool (high Kelvin) tones.

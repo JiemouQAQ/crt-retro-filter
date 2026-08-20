@@ -28,9 +28,13 @@ function Noise.apply(image, params)
   local noise_level = intensity / 100.0 * 255.0
   -- Frame-based seed for temporal variation; a constant seed when
   -- "fixed noise" is enabled keeps the pattern stable across frames.
+  -- In per-frame evolution mode the seed derives from the frame number,
+  -- giving deterministic film-grain animation.
   local frameSeed
   if params.noise_fixed then
     frameSeed = 12345
+  elseif params.anim_enabled and params._frame then
+    frameSeed = 137 + params._frame * 97
   else
     frameSeed = os.time() % 10007
   end

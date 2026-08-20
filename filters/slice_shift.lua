@@ -28,7 +28,8 @@ function SliceShift.apply(image, params)
   if w <= 1 or h <= 0 then return end
 
   local src = image:clone()
-  local seed1, seed2 = 1337, 7331
+  local animOffset = MathUtils.animSeed(params, 97)
+  local seed1, seed2 = 1337 + animOffset, 7331 + animOffset
   local maxShift = math.max(1, math.floor(intensity / 100.0 * w * 0.35))
 
   local bandCount = math.ceil(h / thickness)

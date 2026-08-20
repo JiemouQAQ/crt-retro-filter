@@ -28,8 +28,9 @@ function MirrorTear.apply(image, params)
   if w <= 1 or h <= 1 then return end
 
   local src = image:clone()
+  local animOffset = MathUtils.animSeed(params, 421)
   local strip = math.max(1, math.floor(1 + intensity / 100.0 * 15))
-  local seed = 271828
+  local seed = 271828 + animOffset
 
   if direction == "vertical" then
     -- vertical strips, mirrored top-bottom

@@ -28,9 +28,10 @@ function Displacement.apply(image, params)
   if w <= 1 or h <= 1 then return end
 
   local src = image:clone()
+  local animOffset = MathUtils.animSeed(params, 331)
   local cell = math.max(1, math.floor(1 + scale / 100.0 * 31))
   local maxOff = math.max(1, math.floor(intensity / 100.0 * w * 0.15))
-  local seed = 31337
+  local seed = 31337 + animOffset
 
   for y = 0, h - 1 do
     local cy = math.floor(y / cell)
