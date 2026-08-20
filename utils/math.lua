@@ -97,39 +97,56 @@ function MathUtils.barrelDistortion(x, y, cx, cy, k)
   return cx + dx * factor, cy + dy * factor
 end
 
--- Inverse distortion: map output coordinate back to source
--- Uses Newton's method for approximate inverse
--- k > 0: barrel (convex), k < 0: pincushion (concave)
+-- Robust inverse of the radial lens distortion:
+--   r_out = r_src * (1 + k * r_src^2)
+-- with radii normalized by max_r (both in [0, 1]).
+--   k > 0: barrel / convex  -> unique root, Newton converges from r_out
+--   k < 0: pincushion / concave -> the mapping is only invertible up to
+--          the peak (r_peak); beyond it the source radius clamps to the
+--          peak so edge content stretches inward instead of producing
+--          holes/transparent pixels.
 function MathUtils.inverseBarrelDistortion(x, y, cx, cy, k, max_r)
   if k == 0 then return x, y end
 
   local dx = x - cx
   local dy = y - cy
   local r = math.sqrt(dx * dx + dy * dy)
+  if r < 0.0001 or not max_r or max_r <= 0 then return x, y end
 
-  if r < 0.001 then return x, y end
+  local rn = math.min(r / max_r, 1.0) -- normalized output radius
 
-  -- For pincushion (k < 0), check if r exceeds the maximum mappable radius
-  if k < 0 then
+  local rn_src
+  if k > 0 then
+    -- Unique positive root: Newton from rn
+    local s = rn
+    for _ = 1, 8 do
+      local f = s * (1.0 + k * s * s) - rn
+      local df = 1.0 + 3.0 * k * s * s
+      if math.abs(df) < 1e-9 then break end
+      local step = f / df
+      s = s - step
+      if math.abs(step) < 1e-7 then break end
+    end
+    rn_src = math.max(0, s)
+  else
+    -- Pincushion: invertible only up to the peak; clamp beyond it
     local r_peak = math.sqrt(-1.0 / (3.0 * k))
     local f_peak = r_peak * (1.0 + k * r_peak * r_peak)
-    if r > f_peak then
-      local scale = r_peak / r
-      return cx + dx * scale, cy + dy * scale
+    local target = math.min(rn, f_peak)
+    -- Starting below the peak, Newton converges to the small root
+    local s = target
+    for _ = 1, 8 do
+      local f = s * (1.0 + k * s * s) - target
+      local df = 1.0 + 3.0 * k * s * s
+      if math.abs(df) < 1e-9 then break end
+      local step = f / df
+      s = s - step
+      if math.abs(step) < 1e-7 then break end
     end
+    rn_src = math.max(0, s)
   end
 
-  -- Newton's method to solve r = r' * (1 + k * r'^2) for r'
-  local r_prime = r
-  for _ = 1, 5 do
-    local f = r_prime * (1.0 + k * r_prime * r_prime) - r
-    local df = 1.0 + 3.0 * k * r_prime * r_prime
-    if math.abs(df) < 1e-10 then break end
-    r_prime = r_prime - f / df
-    r_prime = math.max(0, r_prime)
-  end
-
-  local scale = r_prime / r
+  local scale = (rn_src * max_r) / r
   return cx + dx * scale, cy + dy * scale
 end
 

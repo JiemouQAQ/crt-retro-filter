@@ -30,7 +30,7 @@ local ColorUtils = require("utils.color")
 local DialogUI = {}
 
 -- Displayed in the dialog title; keep in sync with package.json
-local PLUGIN_VERSION = "3.9.2"
+local PLUGIN_VERSION = "3.10.0"
 
 -- ============================================================
 -- Preview state

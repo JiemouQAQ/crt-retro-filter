@@ -1,7 +1,9 @@
 -- ============================================================
 -- CRT Retro Filter - Screen Curvature
 -- Simulates the curved surface of a CRT display.
--- Uses barrel/pincushion distortion with bilinear interpolation.
+-- Uses the standard radial lens-distortion model
+-- (r_out = r_src * (1 + k * r_src^2), normalized radii) with
+-- nearest-neighbor sampling to keep pixel art crisp.
 -- Creates a new image (does not modify in-place).
 -- Caches coordinate remap for repeated use at same dimensions.
 -- ============================================================
@@ -14,37 +16,12 @@ local Curvature = {}
 -- Coordinate remap cache: key = "w_h_curvature" -> {{sx, sy}, ...}
 local remapCache = {}
 
--- Sample a pixel using bilinear interpolation
-local function sampleBilinear(src_img, x, y, w, h)
-  local x0 = math.floor(x)
-  local y0 = math.floor(y)
-  local x1 = x0 + 1
-  local y1 = y0 + 1
-
-  local tx = x - x0
-  local ty = y - y0
-
-  x0 = math.max(0, math.min(w - 1, x0))
-  y0 = math.max(0, math.min(h - 1, y0))
-  x1 = math.max(0, math.min(w - 1, x1))
-  y1 = math.max(0, math.min(h - 1, y1))
-
-  local p00 = src_img:getPixel(x0, y0)
-  local p10 = src_img:getPixel(x1, y0)
-  local p01 = src_img:getPixel(x0, y1)
-  local p11 = src_img:getPixel(x1, y1)
-
-  local r00, g00, b00, a00 = ColorUtils.getRGBA(p00)
-  local r10, g10, b10, a10 = ColorUtils.getRGBA(p10)
-  local r01, g01, b01, a01 = ColorUtils.getRGBA(p01)
-  local r11, g11, b11, a11 = ColorUtils.getRGBA(p11)
-
-  return ColorUtils.makeRGBA(
-    MathUtils.bilerp(r00, r10, r01, r11, tx, ty),
-    MathUtils.bilerp(g00, g10, g01, g11, tx, ty),
-    MathUtils.bilerp(b00, b10, b01, b11, tx, ty),
-    MathUtils.bilerp(a00, a10, a01, a11, tx, ty)
-  )
+-- Nearest-neighbor sampling with edge clamping: never samples outside
+-- the image and never produces transparent holes.
+local function sampleNearest(src_img, x, y, w, h)
+  local ix = math.max(0, math.min(w - 1, math.floor(x + 0.5)))
+  local iy = math.max(0, math.min(h - 1, math.floor(y + 0.5)))
+  return src_img:getPixel(ix, iy)
 end
 
 -- Apply screen curvature to an image
@@ -72,10 +49,10 @@ function Curvature.apply(image, params)
   local cy = (h - 1) / 2.0
 
   local max_dist = math.sqrt(cx * cx + cy * cy)
-  local max_dist_sq = max_dist * max_dist
-  if max_dist_sq < 1 then max_dist_sq = 1 end
-  -- positive curvature = convex (barrel), negative = concave (pincushion)
-  local k = (curvature / 100.0) * 0.3 / max_dist_sq
+  if max_dist < 1 then max_dist = 1 end
+  -- Normalized radial coefficient: positive = convex (barrel),
+  -- negative = concave (pincushion). k in [-0.6, 0.6].
+  local k = (curvature / 100.0) * 0.6
 
   -- Try to get cached remap table
   local cacheKey = w .. "_" .. h .. "_" .. curvature
@@ -100,19 +77,14 @@ function Curvature.apply(image, params)
     end
   end
 
-  -- Create output image using cached remap
+  -- Create output image using cached remap (nearest + edge-clamped, so
+  -- every pixel gets a valid color — no transparent holes)
   local result = Image(w, h, image.colorMode)
 
   for it in result:pixels() do
     local idx = it.y * w + it.x + 1
     local coord = remap[idx]
-    local sx, sy = coord.sx, coord.sy
-
-    if sx >= 0 and sx < w and sy >= 0 and sy < h then
-      it(sampleBilinear(image, sx, sy, w, h))
-    else
-      it(ColorUtils.makeRGBA(0, 0, 0, 0))
-    end
+    it(sampleNearest(image, coord.sx, coord.sy, w, h))
   end
 
   -- Apply corner radius by clearing corners

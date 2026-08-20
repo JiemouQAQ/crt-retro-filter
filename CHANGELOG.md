@@ -5,6 +5,14 @@ All notable changes to the CRT Retro Filter extension.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [3.10.0] - 2026-02
+
+### Fixed
+- **Screen Curvature** rewritten on the standard radial lens-distortion model (normalized `r_out = r_src(1 + k·r_src²)`):
+  - **Negative (concave) values now work**: the old inverse solver clamped past the distortion peak to a radius beyond the image, wiping up to ~36% of the canvas to transparent. The inverse is now solved robustly in the monotonic region, and out-of-range samples are edge-clamped — no more holes.
+  - **No more ghosting on positive (convex) values**: sampling switched from bilinear to nearest-neighbor, keeping pixel art crisp and consistent with the other filters.
+  - All pixels always get a valid color (never transparent), determinism and the remap cache are preserved.
+
 ## [3.9.2] - 2026-02
 
 ### Fixed
