@@ -20,6 +20,7 @@ local strings = {
     tab_display = "Display",
     tab_pixel = "Pixel",
     tab_signal = "Signal",
+    tab_glitch = "Glitch",
 
     -- Presets tab
     preset_label = "Preset:",
@@ -60,6 +61,8 @@ local strings = {
     preset_pixel_perfect_desc = "Minimal CRT: subtle scanlines, no distortion",
     preset_glitch_name = "Heavy Glitch",
     preset_glitch_desc = "Experimental: all effects maxed for glitch art",
+    preset_glitch_digital_name = "Digital Glitch",
+    preset_glitch_digital_desc = "Classic glitch art: pixel sorting, slice tearing, data corruption",
     randomize_btn = "Randomize",
     disable_all_btn = "Disable All",
     reset_default_btn = "Reset Default",
@@ -111,6 +114,7 @@ local strings = {
     direction = "Direction:",
     dir_vertical = "Vertical",
     dir_horizontal = "Horizontal",
+    dir_both = "Both",
 
     -- Signal tab
     sep_ripple = "Horizontal Ripple",
@@ -121,6 +125,18 @@ local strings = {
     displacement = "Displacement:",
     sep_persistence = "Phosphor Persistence",
     persistence = "Persistence:",
+
+    -- Glitch tab
+    sep_slice_shift = "Slice Shift",
+    sep_block_corruption = "Block Corruption",
+    sep_pixel_sorting = "Pixel Sorting",
+    sep_tracking_band = "VHS Tracking Band",
+    sep_displacement = "Displacement",
+    density = "Density:",
+    shift_amount = "Shift:",
+    band_width = "Band Width:",
+    position = "Position:",
+    scale = "Scale:",
 
     -- Buttons
     apply = "Apply",
@@ -144,6 +160,7 @@ local strings = {
     tab_display = "显示",
     tab_pixel = "像素",
     tab_signal = "信号",
+    tab_glitch = "故障",
 
     -- Presets tab
     preset_label = "预设:",
@@ -184,6 +201,8 @@ local strings = {
     preset_pixel_perfect_desc = "极简CRT：微妙扫描线、无畸变",
     preset_glitch_name = "重度故障",
     preset_glitch_desc = "实验风格：所有效果全开、故障艺术",
+    preset_glitch_digital_name = "数字故障",
+    preset_glitch_digital_desc = "经典故障艺术：像素排序、行撕裂、数据损坏",
     randomize_btn = "随机生成",
     disable_all_btn = "关闭全部",
     reset_default_btn = "恢复默认",
@@ -235,6 +254,7 @@ local strings = {
     direction = "方向:",
     dir_vertical = "垂直",
     dir_horizontal = "水平",
+    dir_both = "双向",
 
     -- Signal tab
     sep_ripple = "水平波纹",
@@ -245,6 +265,18 @@ local strings = {
     displacement = "偏移:",
     sep_persistence = "荧光粉余晖",
     persistence = "余晖:",
+
+    -- Glitch tab
+    sep_slice_shift = "行撕裂",
+    sep_block_corruption = "数据损坏",
+    sep_pixel_sorting = "像素排序",
+    sep_tracking_band = "VHS 跟踪条",
+    sep_displacement = "置换扭曲",
+    density = "密度:",
+    shift_amount = "位移:",
+    band_width = "条宽:",
+    position = "位置:",
+    scale = "缩放:",
 
     -- Buttons
     apply = "应用",

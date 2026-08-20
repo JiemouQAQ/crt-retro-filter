@@ -18,13 +18,18 @@ local RGBMask = require("filters.rgb_mask")
 local Ripple = require("filters.horizontal_ripple")
 local Jitter = require("filters.interlacing_jitter")
 local Persistence = require("filters.phosphor_persistence")
+local SliceShift = require("filters.slice_shift")
+local BlockCorruption = require("filters.block_corruption")
+local PixelSorting = require("filters.pixel_sorting")
+local TrackingBand = require("filters.tracking_band")
+local Displacement = require("filters.displacement")
 local Lang = require("utils.lang")
 local ColorUtils = require("utils.color")
 
 local DialogUI = {}
 
 -- Displayed in the dialog title; keep in sync with package.json
-local PLUGIN_VERSION = "3.4.1"
+local PLUGIN_VERSION = "3.5.0"
 
 -- ============================================================
 -- Preview state
@@ -49,6 +54,11 @@ local defaults = {
   ripple_enabled = false, ripple_amplitude = 2, ripple_frequency = 30, ripple_phase = 0, ripple_falloff = 0,
   jitter_enabled = false, jitter_intensity = 20, jitter_direction = "horizontal",
   persistence_enabled = false, persistence_intensity = 30, persistence_threshold = 160,
+  slice_shift_enabled = false, slice_shift_intensity = 50, slice_shift_density = 40, slice_shift_thickness = 2,
+  block_corruption_enabled = false, block_corruption_density = 30, block_corruption_size = 2, block_corruption_shift = 50,
+  pixel_sorting_enabled = false, pixel_sorting_intensity = 70, pixel_sorting_threshold = 60, pixel_sorting_direction = "horizontal",
+  tracking_band_enabled = false, tracking_band_intensity = 50, tracking_band_width = 4, tracking_band_position = 50,
+  displacement_enabled = false, displacement_intensity = 30, displacement_scale = 60, displacement_direction = "both",
 }
 
 local paramKeys = {
@@ -64,6 +74,11 @@ local paramKeys = {
   "ripple_enabled", "ripple_amplitude", "ripple_frequency", "ripple_phase", "ripple_falloff",
   "jitter_enabled", "jitter_intensity", "jitter_direction",
   "persistence_enabled", "persistence_intensity", "persistence_threshold",
+  "slice_shift_enabled", "slice_shift_intensity", "slice_shift_density", "slice_shift_thickness",
+  "block_corruption_enabled", "block_corruption_density", "block_corruption_size", "block_corruption_shift",
+  "pixel_sorting_enabled", "pixel_sorting_intensity", "pixel_sorting_threshold", "pixel_sorting_direction",
+  "tracking_band_enabled", "tracking_band_intensity", "tracking_band_width", "tracking_band_position",
+  "displacement_enabled", "displacement_intensity", "displacement_scale", "displacement_direction",
   "global_strength",
 }
 
@@ -190,6 +205,31 @@ local presets = {
       ripple_enabled = true, ripple_amplitude = 4, ripple_frequency = 40, ripple_phase = 90, ripple_falloff = 50,
       jitter_enabled = true, jitter_intensity = 40, jitter_direction = "horizontal",
       persistence_enabled = true, persistence_intensity = 40, persistence_threshold = 120,
+      slice_shift_enabled = true, slice_shift_intensity = 90, slice_shift_density = 60, slice_shift_thickness = 3,
+      block_corruption_enabled = true, block_corruption_density = 50, block_corruption_size = 4, block_corruption_shift = 80,
+      pixel_sorting_enabled = true, pixel_sorting_intensity = 90, pixel_sorting_threshold = 40, pixel_sorting_direction = "horizontal",
+      tracking_band_enabled = true, tracking_band_intensity = 60, tracking_band_width = 6, tracking_band_position = 30,
+      displacement_enabled = true, displacement_intensity = 40, displacement_scale = 60, displacement_direction = "both",
+    }
+  },
+  {
+    name_key = "preset_glitch_digital_name",
+    desc_key = "preset_glitch_digital_desc",
+    params = {
+      scanlines_enabled = false,
+      curvature_enabled = false,
+      aberration_enabled = true, aberration_shift_r = 2, aberration_shift_b = -2, aberration_falloff = 60,
+      vignette_enabled = true, vignette_intensity = 30, vignette_radius = 45, vignette_softness = 50, vignette_ratio = "auto",
+      bloom_enabled = false,
+      noise_enabled = false,
+      color_temp_enabled = false,
+      pixelation_enabled = false,
+      rgb_mask_enabled = false,
+      slice_shift_enabled = true, slice_shift_intensity = 60, slice_shift_density = 40, slice_shift_thickness = 2,
+      block_corruption_enabled = true, block_corruption_density = 25, block_corruption_size = 3, block_corruption_shift = 40,
+      pixel_sorting_enabled = true, pixel_sorting_intensity = 80, pixel_sorting_threshold = 50, pixel_sorting_direction = "horizontal",
+      tracking_band_enabled = false,
+      displacement_enabled = true, displacement_intensity = 15, displacement_scale = 80, displacement_direction = "both",
     }
   },
 }
@@ -242,6 +282,14 @@ local function syncParams(dlg, params)
           or (v == "Slot Mask" or v == "槽状遮罩") and "slot" or "grille"
       elseif k == "jitter_direction" then
         params[k] = (v == "Vertical" or v == "垂直") and "vertical" or "horizontal"
+      elseif k == "pixel_sorting_direction" or k == "displacement_direction" then
+        if v == "Both" or v == "双向" then
+          params[k] = "both"
+        elseif v == "Vertical" or v == "垂直" then
+          params[k] = "vertical"
+        else
+          params[k] = "horizontal"
+        end
       else
         params[k] = v
       end
@@ -270,6 +318,9 @@ local function applyPresetToDialog(dlg, preset_params, params, T)
       pcall(function() dlg:modify{ id = k, text = label } end)
     elseif k == "jitter_direction" then
       local label = (v == "vertical") and T.dir_vertical or T.dir_horizontal
+      pcall(function() dlg:modify{ id = k, text = label } end)
+    elseif k == "pixel_sorting_direction" or k == "displacement_direction" then
+      local label = (v == "vertical") and T.dir_vertical or (v == "both") and T.dir_both or T.dir_horizontal
       pcall(function() dlg:modify{ id = k, text = label } end)
     elseif k == "vignette_ratio" then
       local label = (v == "1:1" and T.ratio_1_1 or v == "4:3" and T.ratio_4_3 or v == "16:9" and T.ratio_16_9 or T.ratio_auto)
@@ -339,6 +390,23 @@ function DialogUI.applyFilters(image, params)
   end
   if params.noise_enabled then
     Noise.apply(img, params)
+  end
+
+  -- Glitch tab (signal damage stage, appended at the end of the chain)
+  if params.slice_shift_enabled then
+    SliceShift.apply(img, params)
+  end
+  if params.block_corruption_enabled then
+    BlockCorruption.apply(img, params)
+  end
+  if params.pixel_sorting_enabled then
+    PixelSorting.apply(img, params)
+  end
+  if params.tracking_band_enabled then
+    TrackingBand.apply(img, params)
+  end
+  if params.displacement_enabled then
+    Displacement.apply(img, params)
   end
 
   -- Blend the filtered result back toward the pristine original snapshot
@@ -414,6 +482,26 @@ function DialogUI.generateRandomParams()
     persistence_enabled = math.random() > 0.5,
     persistence_intensity = math.random(10, 50),
     persistence_threshold = math.random(100, 200),
+    slice_shift_enabled = math.random() > 0.5,
+    slice_shift_intensity = math.random(20, 100),
+    slice_shift_density = math.random(10, 60),
+    slice_shift_thickness = math.random(1, 4),
+    block_corruption_enabled = math.random() > 0.5,
+    block_corruption_density = math.random(10, 50),
+    block_corruption_size = math.random(1, 4),
+    block_corruption_shift = math.random(20, 80),
+    pixel_sorting_enabled = math.random() > 0.5,
+    pixel_sorting_intensity = math.random(30, 100),
+    pixel_sorting_threshold = math.random(30, 90),
+    pixel_sorting_direction = math.random() > 0.5 and "horizontal" or "vertical",
+    tracking_band_enabled = math.random() > 0.5,
+    tracking_band_intensity = math.random(20, 80),
+    tracking_band_width = math.random(2, 8),
+    tracking_band_position = math.random(0, 100),
+    displacement_enabled = math.random() > 0.5,
+    displacement_intensity = math.random(10, 60),
+    displacement_scale = math.random(20, 100),
+    displacement_direction = ({"horizontal", "vertical", "both"})[math.random(1, 3)],
   }
   return r
 end
@@ -882,6 +970,80 @@ function DialogUI.show(plugin)
   dlg:slider{ id = "persistence_threshold", label = T.threshold, min = 0, max = 255, value = params.persistence_threshold, hexpand = true,
     onchange = function() updatePreview() end }
 
+  -- ===== Tab: Glitch =====
+  dlg:tab{ id = "tab_glitch", text = T.tab_glitch }
+
+  dlg:separator{ text = T.sep_slice_shift }
+  dlg:check{ id = "slice_shift_enabled", label = T.enable, selected = params.slice_shift_enabled,
+    onclick = function() updatePreview() end }
+  dlg:slider{ id = "slice_shift_intensity", label = T.intensity, min = 0, max = 100, value = params.slice_shift_intensity, hexpand = true,
+    onchange = function() updatePreview() end }
+  dlg:slider{ id = "slice_shift_density", label = T.density, min = 0, max = 100, value = params.slice_shift_density, hexpand = true,
+    onchange = function() updatePreview() end }
+  dlg:slider{ id = "slice_shift_thickness", label = T.thickness, min = 1, max = 8, value = params.slice_shift_thickness, hexpand = true,
+    onchange = function() updatePreview() end }
+
+  dlg:separator{ text = T.sep_block_corruption }
+  dlg:check{ id = "block_corruption_enabled", label = T.enable, selected = params.block_corruption_enabled,
+    onclick = function() updatePreview() end }
+  dlg:slider{ id = "block_corruption_density", label = T.density, min = 0, max = 100, value = params.block_corruption_density, hexpand = true,
+    onchange = function() updatePreview() end }
+  dlg:slider{ id = "block_corruption_size", label = T.block_size, min = 1, max = 8, value = params.block_corruption_size, hexpand = true,
+    onchange = function() updatePreview() end }
+  dlg:slider{ id = "block_corruption_shift", label = T.shift_amount, min = 0, max = 100, value = params.block_corruption_shift, hexpand = true,
+    onchange = function() updatePreview() end }
+
+  dlg:separator{ text = T.sep_pixel_sorting }
+  dlg:check{ id = "pixel_sorting_enabled", label = T.enable, selected = params.pixel_sorting_enabled,
+    onclick = function() updatePreview() end }
+  dlg:slider{ id = "pixel_sorting_intensity", label = T.intensity, min = 0, max = 100, value = params.pixel_sorting_intensity, hexpand = true,
+    onchange = function() updatePreview() end }
+  dlg:slider{ id = "pixel_sorting_threshold", label = T.threshold, min = 0, max = 100, value = params.pixel_sorting_threshold, hexpand = true,
+    onchange = function() updatePreview() end }
+  dlg:combobox{
+    id = "pixel_sorting_direction",
+    label = T.direction,
+    option = (params.pixel_sorting_direction == "vertical") and T.dir_vertical or T.dir_horizontal,
+    options = { T.dir_horizontal, T.dir_vertical },
+    hexpand = true,
+    onchange = function()
+      local v = dlg.data.pixel_sorting_direction
+      params.pixel_sorting_direction = (v == T.dir_vertical) and "vertical" or "horizontal"
+      updatePreview()
+    end
+  }
+
+  dlg:separator{ text = T.sep_tracking_band }
+  dlg:check{ id = "tracking_band_enabled", label = T.enable, selected = params.tracking_band_enabled,
+    onclick = function() updatePreview() end }
+  dlg:slider{ id = "tracking_band_intensity", label = T.intensity, min = 0, max = 100, value = params.tracking_band_intensity, hexpand = true,
+    onchange = function() updatePreview() end }
+  dlg:slider{ id = "tracking_band_width", label = T.band_width, min = 1, max = 16, value = params.tracking_band_width, hexpand = true,
+    onchange = function() updatePreview() end }
+  dlg:slider{ id = "tracking_band_position", label = T.position, min = 0, max = 100, value = params.tracking_band_position, hexpand = true,
+    onchange = function() updatePreview() end }
+
+  dlg:separator{ text = T.sep_displacement }
+  dlg:check{ id = "displacement_enabled", label = T.enable, selected = params.displacement_enabled,
+    onclick = function() updatePreview() end }
+  dlg:slider{ id = "displacement_intensity", label = T.intensity, min = 0, max = 100, value = params.displacement_intensity, hexpand = true,
+    onchange = function() updatePreview() end }
+  dlg:slider{ id = "displacement_scale", label = T.scale, min = 0, max = 100, value = params.displacement_scale, hexpand = true,
+    onchange = function() updatePreview() end }
+  dlg:combobox{
+    id = "displacement_direction",
+    label = T.direction,
+    option = (params.displacement_direction == "vertical") and T.dir_vertical
+      or (params.displacement_direction == "both") and T.dir_both or T.dir_horizontal,
+    options = { T.dir_horizontal, T.dir_vertical, T.dir_both },
+    hexpand = true,
+    onchange = function()
+      local v = dlg.data.displacement_direction
+      params.displacement_direction = (v == T.dir_vertical) and "vertical" or (v == T.dir_both) and "both" or "horizontal"
+      updatePreview()
+    end
+  }
+
   dlg:endtabs{ selected = "tab_presets" }
 
   -- ===== Buttons =====
@@ -898,6 +1060,9 @@ function DialogUI.show(plugin)
           pcall(function() dlg:modify{ id = k, text = label } end)
         elseif k == "jitter_direction" then
           local label = (v == "vertical") and T.dir_vertical or T.dir_horizontal
+          pcall(function() dlg:modify{ id = k, text = label } end)
+        elseif k == "pixel_sorting_direction" or k == "displacement_direction" then
+          local label = (v == "vertical") and T.dir_vertical or (v == "both") and T.dir_both or T.dir_horizontal
           pcall(function() dlg:modify{ id = k, text = label } end)
         elseif k == "vignette_ratio" then
           local label = (v == "1:1" and T.ratio_1_1 or v == "4:3" and T.ratio_4_3 or v == "16:9" and T.ratio_16_9 or T.ratio_auto)

@@ -5,6 +5,19 @@ All notable changes to the CRT Retro Filter extension.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [3.5.0] - 2026-02
+
+### Added
+- **Glitch Art tab** (5 new deterministic filters, 12 → 17 total):
+  - **Slice Shift** (行撕裂) — random horizontal band tearing
+  - **Block Corruption** (数据损坏) — data-moshing rectangular blocks
+  - **Pixel Sorting** (像素排序) — classic luminance-sorted scan lines
+  - **VHS Tracking Band** (VHS 跟踪条) — damaged-tape interference band
+  - **Displacement** (置换扭曲) — random vector-field warp (horizontal / vertical / both)
+- New preset **Digital Glitch** (数字故障): pixel sorting + slice tearing + corruption
+- **Heavy Glitch** preset now stacks all glitch filters on top of its existing effects
+- All glitch effects are deterministic: identical parameters produce identical output, so *Apply to All Frames* keeps patterns stable across animation frames
+
 ## [3.4.1] - 2026-02
 
 ### Changed

@@ -4,10 +4,10 @@
 
 > [中文文档](README_CN.md)
 
-Render your pixel art through the lens of a classic CRT display. 12 independent filters, 9 built-in presets, real-time preview, bilingual EN/ZH support, and full custom preset management.
+Render your pixel art through the lens of a classic CRT display. 17 independent filters, 10 built-in presets, real-time preview, bilingual EN/ZH support, and full custom preset management.
 
 <p align="center">
-  <strong>12 Filters · 5 Tabs · 9 Presets · Real-time Preview · Single Undo</strong>
+  <strong>17 Filters · 6 Tabs · 10 Presets · Real-time Preview · Single Undo</strong>
 </p>
 
 ## Table of Contents
@@ -27,10 +27,11 @@ Render your pixel art through the lens of a classic CRT display. 12 independent 
 
 ## Features
 
-- **12 CRT Filters** — Scanlines, Screen Curvature (convex/concave), Chromatic Aberration, Phosphor Bloom, Vignette, Signal Noise, Color Temperature, Pixelation, RGB Phosphor Mask, Horizontal Ripple, Interlacing Jitter, Phosphor Persistence
+- **17 CRT Filters** — Scanlines, Screen Curvature (convex/concave), Chromatic Aberration, Phosphor Bloom, Vignette, Signal Noise, Color Temperature, Pixelation, RGB Phosphor Mask, Horizontal Ripple, Interlacing Jitter, Phosphor Persistence, plus glitch art: Slice Shift, Block Corruption, Pixel Sorting, VHS Tracking Band, Displacement
+- **Glitch Art Tab** — 5 new deterministic filters: identical parameters always produce identical output, so *Apply to All Frames* keeps glitch patterns stable across animation frames
 - **Real-time Preview** — See changes instantly as you adjust parameters, powered by an on-canvas preview with change detection for performance
 - **Before/After Compare** — Toggle or hold the preview canvas to switch between the filtered result and the original
-- **9 Built-in Presets** — Classic Arcade, 80s Computer, Broadcast TV, Subtle Retro, CRT Monitor, VHS Tape, Trinitron, Pixel Perfect, Heavy Glitch
+- **10 Built-in Presets** — Classic Arcade, 80s Computer, Broadcast TV, Subtle Retro, CRT Monitor, VHS Tape, Trinitron, Pixel Perfect, Heavy Glitch, Digital Glitch
 - **Preset Strength** — One slider dials the overall effect intensity of all filters (0–100%), kept when switching built-in presets
 - **Custom Presets** — Save, load, and delete your own parameter combinations
 - **Randomize** — Generate random filter configurations with one click, all controls update visually
@@ -43,7 +44,7 @@ Render your pixel art through the lens of a classic CRT display. 12 independent 
 
 ## Showcase
 
-> 📷 All screenshots are real output: a 1280×720 pixel-art original with each preset and individual filter applied.
+> 📷 Presets and original are real screenshots of a 1280×720 pixel-art piece with each preset/filter applied. The 6 glitch images are placeholders for now.
 
 ### Original
 
@@ -107,9 +108,15 @@ Render your pixel art through the lens of a classic CRT display. 12 independent 
   <img src="assets/showcase/preset-heavy-glitch.png" alt="Heavy Glitch" width="1280">
 </p>
 
+**Digital Glitch** — Classic glitch art: pixel sorting, slice tearing, data corruption
+
+<p align="center">
+  <img src="assets/showcase/preset-glitch-digital.png" alt="Digital Glitch" width="1280">
+</p>
+
 ### Individual Filter Effects
 
-(ordered by dialog tabs: Screen → Display → Pixel → Signal)
+(ordered by dialog tabs: Screen → Display → Pixel → Signal → Glitch)
 
 **Scanlines** (Screen)
 
@@ -183,6 +190,38 @@ Render your pixel art through the lens of a classic CRT display. 12 independent 
   <img src="assets/filters/persistence.png" alt="Phosphor Persistence" width="1280">
 </p>
 
+**Slice Shift** (Glitch)
+
+<p align="center">
+  <img src="assets/filters/slice-shift.png" alt="Slice Shift" width="1280">
+</p>
+
+**Block Corruption** (Glitch)
+
+<p align="center">
+  <img src="assets/filters/block-corruption.png" alt="Block Corruption" width="1280">
+</p>
+
+**Pixel Sorting** (Glitch)
+
+<p align="center">
+  <img src="assets/filters/pixel-sorting.png" alt="Pixel Sorting" width="1280">
+</p>
+
+**VHS Tracking Band** (Glitch)
+
+<p align="center">
+  <img src="assets/filters/tracking-band.png" alt="VHS Tracking Band" width="1280">
+</p>
+
+**Displacement** (Glitch)
+
+<p align="center">
+  <img src="assets/filters/displacement.png" alt="Displacement" width="1280">
+</p>
+
+> 🖼️ The 5 glitch filter images and the Digital Glitch preset above are placeholders and will be replaced with real screenshots.
+
 ### Plugin Dialog
 
 <p align="center">
@@ -213,7 +252,7 @@ Render your pixel art through the lens of a classic CRT display. 12 independent 
 
 ### Dialog Layout
 
-The dialog is organized into five tabs:
+The dialog is organized into six tabs:
 
 | Tab | Contents |
 |-----|----------|
@@ -222,6 +261,7 @@ The dialog is organized into five tabs:
 | **Display** | Bloom / Glow, Vignette, Noise / Static |
 | **Pixel** | Color Temperature, Pixelation, RGB Phosphor Mask |
 | **Signal** | Horizontal Ripple, Interlacing Jitter, Phosphor Persistence |
+| **Glitch** | Slice Shift, Block Corruption, Pixel Sorting, VHS Tracking Band, Displacement |
 
 Each filter has an independent **Enable** toggle. Click **Apply** to commit — all changes are grouped into a single undo step (`Ctrl+Z`).
 
@@ -365,6 +405,51 @@ Simulates the afterglow of CRT phosphors, creating a ghosting effect from previo
 | Intensity | 0–100 | Afterglow strength |
 | Threshold | 0–255 | Minimum brightness for persistence |
 
+### Slice Shift
+Classic glitch tearing: random horizontal bands are shifted left/right by pseudo-random amounts. Fully deterministic — identical parameters always produce the same pattern.
+
+| Parameter | Range | Description |
+|-----------|-------|-------------|
+| Intensity | 0–100 | Max horizontal displacement |
+| Density | 0–100 | Fraction of bands affected |
+| Thickness | 1–8 | Band height in pixel rows |
+
+### Block Corruption
+Data-moshing: rectangular blocks are shifted horizontally, leaving corrupted edges where the original pixels show through.
+
+| Parameter | Range | Description |
+|-----------|-------|-------------|
+| Density | 0–100 | Fraction of blocks affected |
+| Block Size | 1–8 | Block size |
+| Shift | 0–100 | Max horizontal displacement |
+
+### Pixel Sorting
+The most iconic glitch-art technique: contiguous runs of pixels brighter than the threshold are sorted by luminance along each line, producing the classic gradient smear.
+
+| Parameter | Range | Description |
+|-----------|-------|-------------|
+| Intensity | 0–100 | Fraction of lines processed |
+| Threshold | 0–100 | Only sort runs above this brightness |
+| Direction | Horizontal / Vertical | Sorting axis |
+
+### VHS Tracking Band
+Damaged-tape tracking error: within a horizontal band, rows are displaced by noisy amounts and static is added.
+
+| Parameter | Range | Description |
+|-----------|-------|-------------|
+| Intensity | 0–100 | Displacement and static strength |
+| Band Width | 1–16 | Band half-height in pixel rows |
+| Position | 0–100 | Band center from top |
+
+### Displacement
+Random vector-field warp: the image is displaced by a blocky noise field (like an AE displacement map). Horizontal, vertical, or both axes.
+
+| Parameter | Range | Description |
+|-----------|-------|-------------|
+| Intensity | 0–100 | Max offset in pixels |
+| Scale | 0–100 | Noise cell size (low = fine, high = coarse) |
+| Direction | Horizontal / Vertical / Both | Displacement axes |
+
 ## Presets
 
 | Preset | Description |
@@ -378,6 +463,7 @@ Simulates the afterglow of CRT phosphors, creating a ghosting effect from previo
 | **Trinitron** | Sony aperture grille, deep contrast, sharp |
 | **Pixel Perfect** | Minimal CRT: subtle scanlines, no distortion |
 | **Heavy Glitch** | All effects maxed for experimental glitch art |
+| **Digital Glitch** | Classic glitch art: pixel sorting, slice tearing, data corruption |
 
 ## Custom Presets
 
@@ -394,10 +480,11 @@ Custom presets are persisted via `plugin.preferences` and survive Aseprite resta
 ```
 Pixelation → Curvature → Chromatic Aberration → Ripple → Jitter →
 Scanlines → RGB Mask → Bloom → Phosphor Persistence → Vignette →
-Color Temperature → Noise
+Color Temperature → Noise → Slice Shift → Block Corruption →
+Pixel Sorting → VHS Tracking Band → Displacement
 ```
 
-This order mirrors the real CRT imaging pipeline: resolution reduction first, then geometry distortion, signal artifacts, phosphor patterns, bloom, screen properties, and finally noise overlay.
+This order mirrors the real CRT imaging pipeline: resolution reduction first, then geometry distortion, signal artifacts, phosphor patterns, bloom, screen properties, noise overlay, and finally glitch/signal damage.
 
 ## FAQ
 
@@ -463,6 +550,11 @@ crt-retro-filter/
 │   ├── horizontal_ripple.lua # Horizontal ripple
 │   ├── interlacing_jitter.lua# Interlacing jitter
 │   └── phosphor_persistence.lua # Phosphor persistence
+│   ├── slice_shift.lua         # Slice shift (glitch tear)
+│   ├── block_corruption.lua    # Block corruption
+│   ├── pixel_sorting.lua       # Pixel sorting
+│   ├── tracking_band.lua       # VHS tracking band
+│   └── displacement.lua        # Displacement warp
 ├── ui/
 │   └── dialog.lua            # Dialog UI, preview, presets, randomize
 └── utils/
