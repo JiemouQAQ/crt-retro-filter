@@ -113,8 +113,7 @@
 **数字故障** — 经典故障艺术：像素排序、行撕裂、数据损坏
 
 <p align="center">
-  <img src="assets/showcase/preset-glitch-digital.png" alt="数字故障" width="1280">
-</p>
+<img width="1920" height="1080" alt="0803e1" src="https://github.com/user-attachments/assets/56d663a5-12b3-40cd-b67c-fb2dbf14c79e" />
 
 ### 单滤镜效果
 
@@ -195,37 +194,37 @@
 **行撕裂**（数据故障）
 
 <p align="center">
-  <img src="assets/filters/slice-shift.png" alt="行撕裂" width="1280">
+<img width="1920" height="1080" alt="0803e2" src="https://github.com/user-attachments/assets/a33528d0-7c9b-4644-8200-e1d039588b55" />
 </p>
 
 **数据损坏**（数据故障）
 
 <p align="center">
-  <img src="assets/filters/block-corruption.png" alt="数据损坏" width="1280">
+ <img width="1920" height="1080" alt="0803e3" src="https://github.com/user-attachments/assets/d5d20ed5-af20-4bc3-b967-4d39006e37ff" />
 </p>
 
 **像素排序**（数据故障）
 
 <p align="center">
-  <img src="assets/filters/pixel-sorting.png" alt="像素排序" width="1280">
+<img width="1920" height="1080" alt="0803e4" src="https://github.com/user-attachments/assets/bd3e4b0a-156a-457f-8588-dea3337af102" />
 </p>
 
 **VHS 跟踪条**（信号故障）
 
 <p align="center">
-  <img src="assets/filters/tracking-band.png" alt="VHS 跟踪条" width="1280">
+<img width="1920" height="1080" alt="0803e5" src="https://github.com/user-attachments/assets/db7d464f-e0e7-467e-addf-57078d49196e" />
 </p>
 
 **置换扭曲**（信号故障）
 
 <p align="center">
-  <img src="assets/filters/displacement.png" alt="置换扭曲" width="1280">
+<img width="1920" height="1080" alt="0803e6" src="https://github.com/user-attachments/assets/ced12082-b519-41db-a9c9-b86e4aee6b51" />
 </p>
 
 **镜像撕裂**（信号故障）
 
 <p align="center">
-  <img src="assets/filters/mirror-tear.png" alt="镜像撕裂" width="1280">
+<img width="1920" height="1080" alt="0803e7" src="https://github.com/user-attachments/assets/208227c0-bf57-43ec-95ea-01fc3441c557" />
 </p>
 
 > 🖼️ 以上 6 张故障滤镜与"数字故障"预设的图片为占位图，稍后替换为真实效果截图。
