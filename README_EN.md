@@ -46,7 +46,7 @@ Render your pixel art through the lens of a classic CRT display. 18 independent 
 
 ## Showcase
 
-> 📷 Presets and original are real screenshots of a 1280×720 pixel-art piece with each preset/filter applied. The 6 glitch images are placeholders for now.
+> 📷 All screenshots are real output: a 1280×720 pixel-art original with each preset and individual filter applied.
 
 ### Original
 
@@ -227,8 +227,6 @@ Render your pixel art through the lens of a classic CRT display. 18 independent 
 <p align="center">
   <img src="assets/filters/mirror-tear.png" alt="Mirror Tear" width="1280">
 </p>
-
-> 🖼️ The 6 glitch filter images and the Digital Glitch preset above are placeholders and will be replaced with real screenshots.
 
 ### Plugin Dialog
 
