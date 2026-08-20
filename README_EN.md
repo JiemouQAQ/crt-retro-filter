@@ -332,12 +332,12 @@ Simulates the horizontal dark lines created by CRT interlaced scanning. Alternat
 | Interlace Flicker | on/off | Alternate the darkened rows every frame (CRT shimmer, for animations) |
 
 ### Screen Curvature
-Simulates the spherical curvature of a CRT tube. Supports both **barrel (positive, convex)** and **pincushion (negative, concave)** modes with automatic boundary fitting: the full picture is always visible — no cropping, no transparent holes, canvas size and aspect ratio preserved.
+Simulates the spherical curvature of a CRT tube. Supports both **barrel (positive, convex)** and **pincushion (negative, concave)** modes with smooth bilinear interpolation; out-of-bounds sampling is edge-clamped so the warped result **fully covers the original** (no semi-transparent see-through, no transparent holes), and the canvas size is preserved.
 
 | Parameter | Range | Description |
 |-----------|-------|-------------|
 | Curvature | -100–100 | Bend amount (negative = concave, positive = convex) |
-| Corner Radius | 0–100 | Rounded corner radius |
+| Corner Radius | 0–100 | Rounded corner radius in pixels (capped at 50% of the image's short side) |
 
 ### Chromatic Aberration
 Simulates imperfect RGB convergence. Red and blue channels are shifted radially outward from center.

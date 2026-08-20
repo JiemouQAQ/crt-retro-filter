@@ -5,6 +5,13 @@ All notable changes to the CRT Retro Filter extension.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [3.11.1] - 2026-02
+
+### Changed
+- **Screen Curvature** restored to the v3.4.1 behavior (barrel/pincushion, bilinear interpolation, original strength mapping), with two fixes:
+  - Out-of-bounds sampling is now **edge-clamped** instead of writing transparent pixels — the warped image fully covers the original (no semi-transparent ghosting / see-through)
+  - **Corner radius capped at 50% of the image's short side** so rounded corners can never swallow the picture
+
 ## [3.11.0] - 2026-02
 
 ### Fixed
