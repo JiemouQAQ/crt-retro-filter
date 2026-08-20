@@ -593,7 +593,7 @@ crt-retro-filter/
     └── math.lua              # Gaussian kernel, interpolation, fast hash
 ```
 
-> The `assets/` folder at the repository root only holds README showcase images (including placeholders); it is not part of the extension itself.
+> The `assets/` folder at the repository root only holds README showcase images; it is not part of the extension itself.
 
 ## License
 
