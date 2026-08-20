@@ -1,10 +1,15 @@
 -- ============================================================
 -- CRT Retro Filter - Screen Curvature
--- Simulates the curved surface of a CRT display.
--- Uses the standard radial lens-distortion model
--- (r_out = r_src * (1 + k * r_src^2), normalized radii) with
--- nearest-neighbor sampling to keep pixel art crisp.
--- Creates a new image (does not modify in-place).
+-- Simulates the curved surface of a CRT display using the standard
+-- radial lens-distortion model (r_out = r_src * (1 + k * r_src^2),
+-- normalized radii) with BOTH barrel (convex, k > 0) and pincushion
+-- (concave, k < 0) modes.
+-- The remap is boundary-fitted: the largest source radius is scaled
+-- onto the canvas boundary, so the full picture is always visible —
+-- barrel no longer crops the corners and pincushion no longer
+-- samples out of bounds or collapses the edges. Canvas size and
+-- aspect ratio are preserved. Nearest-neighbor sampling keeps
+-- pixel art crisp. Creates a new image (does not modify in-place).
 -- Caches coordinate remap for repeated use at same dimensions.
 -- ============================================================
 
@@ -59,14 +64,35 @@ function Curvature.apply(image, params)
   local remap = remapCache[cacheKey]
 
   if not remap then
-    -- Precompute all source coordinates
+    -- Pass 1: raw radial inverse for every output pixel, tracking the
+    -- maximum source radius used.
     remap = {}
     local idx = 0
+    local maxSrc = 0
     for y = 0, h - 1 do
       for x = 0, w - 1 do
         local sx, sy = MathUtils.inverseBarrelDistortion(x, y, cx, cy, k, max_dist)
         idx = idx + 1
         remap[idx] = { sx = sx, sy = sy }
+        local sr = math.sqrt((sx - cx) * (sx - cx) + (sy - cy) * (sy - cy))
+        if sr > maxSrc then maxSrc = sr end
+      end
+    end
+
+    -- Pass 2: boundary-fit compensation. Scale every source position so
+    -- the largest source radius maps exactly onto the canvas boundary.
+    -- This fixes both modes:
+    --   barrel   -> outer source ring was cropped (never shown)
+    --   pincushion -> corners sampled beyond the image / collapsed onto
+    --                 one radius (edge smear)
+    -- After the fit: no cropping, no out-of-bounds sampling, the whole
+    -- picture is always visible and the canvas/proportions are preserved.
+    if maxSrc > 0 and math.abs(maxSrc - max_dist) > 0.5 then
+      local fit = max_dist / maxSrc
+      for i = 1, idx do
+        local c = remap[i]
+        c.sx = cx + (c.sx - cx) * fit
+        c.sy = cy + (c.sy - cy) * fit
       end
     end
     remapCache[cacheKey] = remap

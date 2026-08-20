@@ -332,7 +332,7 @@ Simulates the horizontal dark lines created by CRT interlaced scanning. Alternat
 | Interlace Flicker | on/off | Alternate the darkened rows every frame (CRT shimmer, for animations) |
 
 ### Screen Curvature
-Simulates the spherical curvature of a CRT tube. Supports both convex (positive) and concave (negative) curvature.
+Simulates the spherical curvature of a CRT tube. Supports both **barrel (positive, convex)** and **pincushion (negative, concave)** modes with automatic boundary fitting: the full picture is always visible — no cropping, no transparent holes, canvas size and aspect ratio preserved.
 
 | Parameter | Range | Description |
 |-----------|-------|-------------|
