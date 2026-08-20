@@ -38,8 +38,8 @@ Render your pixel art through the lens of a classic CRT display. 18 independent 
 - **Duplicate Layer Option** — Optionally apply filters to a new layer, preserving the original
 - **Selection Support** — Apply filters to the selected area only, leaving pixels outside untouched
 - **Apply to All Frames** — Process every frame of the active layer in one click, grouped into a single undo step
-- **Per-Frame Evolution** — When enabled, noise and all 6 glitch filters change their pattern with the frame number (deterministic: rerunning the animation reproduces it exactly), the VHS tracking band scrolls, and Scanlines can add classic interlace flicker — dynamic glitch / film-grain animation via *Apply to All Frames*
-- **Progress & Task Protection** — heavy jobs show a live progress bar (cancelable); oversized tasks are refused with a clear message, and any failure rolls back automatically — no freezes or crashes
+- **Per-Frame Evolution** — turn on for a "living CRT" animation mode (all deterministic, rerunning reproduces it exactly): noise becomes film grain, all 6 glitch filters change pattern per frame, the VHS band scrolls, ripples sweep, color temperature drifts, aberration/bloom/vignette/jitter pulse, pixelation flickers, the RGB mask rolls — and **Phosphor Persistence blends the previous frame's actual output** for real afterglow
+- **Task Protection** — oversized tasks are refused with a clear message, any failure rolls back automatically — no freezes or crashes; the dialog notes that heavy jobs take patience
 - **Bilingual** — Full English and Chinese (中文) interface, switchable in the dialog
 - **Quick Apply** — Re-apply last saved settings without opening the dialog
 - **Keyboard Shortcut** — Bind custom hotkeys to Quick Apply and Randomize (no defaults; e.g. `Ctrl+Shift+Q` / `Ctrl+Shift+R`)
@@ -309,11 +309,16 @@ If no selection is active when checked, an alert is shown when you click **Apply
 
 Check **"Apply to All Frames"** to run the filter chain on **every frame** of the active layer (for animations), all grouped into a **single** undo step.
 
-**Making animation**: also check **"Per-Frame Evolution"** — noise and glitch patterns now change with the frame number: Slice Shift / Block Corruption / Pixel Sorting / Displacement / Mirror Tear get a fresh pattern each frame, the VHS Tracking Band scrolls down, and Noise becomes film grain. All evolution is deterministic (rerunning the animation reproduces it exactly), and the dialog preview shows the **current frame**'s result. **Interlace Flicker** on the Scanlines filter can be enabled separately for the classic CRT shimmer.
+**Making animation**: also check **"Per-Frame Evolution"** for the full "living CRT" mode (everything deterministic — rerunning the animation reproduces it exactly):
+
+- **Pattern evolution**: noise becomes film grain; Slice Shift / Block Corruption / Pixel Sorting / Displacement / Mirror Tear get a fresh pattern each frame; the VHS Tracking Band scrolls
+- **Parameter animation**: ripple phase sweeps, color temperature drifts warm/cool, chromatic aberration pulses, curvature/bloom/vignette/jitter breathe, pixelation flickers resolution, the RGB mask rolls
+- **Real afterglow**: Phosphor Persistence blends the *previous frame's actual output*, decaying by its intensity — genuine motion trails
+- **Interlace Flicker** on Scanlines can be enabled separately; the dialog preview always shows the **current frame**'s result
 
 > Tip: to keep some filters static while others evolve, disable those filters or use **Fixed Noise**.
 
-**Heavy-task protection**: before applying, the plugin estimates the workload — jobs that would take minutes are **refused with a clear message** (suggestions: smaller canvas / fewer frames / fewer filters); normal heavy jobs show a **progress bar** (Cancel rolls everything back, leaving no half-applied state); any failure rolls the transaction back and reports the error instead of crashing Aseprite.
+**Heavy-task protection**: before applying, the plugin estimates the workload — jobs that would take minutes are **refused with a clear message** (suggestions: smaller canvas / fewer frames / fewer filters); heavy jobs have **no progress bar — please be patient** (noted in the dialog); any failure rolls the transaction back and reports the error instead of crashing Aseprite.
 
 ## Filter Reference
 

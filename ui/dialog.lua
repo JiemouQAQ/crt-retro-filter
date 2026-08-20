@@ -26,12 +26,11 @@ local Displacement = require("filters.displacement")
 local MirrorTear = require("filters.mirror_tear")
 local Lang = require("utils.lang")
 local ColorUtils = require("utils.color")
-local Progress = require("ui.progress")
 
 local DialogUI = {}
 
 -- Displayed in the dialog title; keep in sync with package.json
-local PLUGIN_VERSION = "3.8.0"
+local PLUGIN_VERSION = "3.9.0"
 
 -- ============================================================
 -- Preview state
@@ -730,6 +729,7 @@ function DialogUI.show(plugin)
   }
   dlg:check{ id = "all_frames", label = T.all_frames, selected = prefs.all_frames or false }
   dlg:check{ id = "anim_enabled", label = T.anim_evolution, selected = prefs.anim_enabled or false }
+  dlg:label{ text = "  " .. T.perf_note }
 
   -- Disable All / Reset Default on one row
   dlg:newrow()
@@ -1191,8 +1191,6 @@ end
 -- Rough cost guard: if the estimated pixel-filter operations exceed this
 -- the task is refused (the UI would otherwise freeze for minutes).
 DialogUI.MAX_PIXEL_OPS = 150000000
--- Show the progress dialog once the estimate passes this threshold.
-DialogUI.PROGRESS_PIXEL_OPS = 15000000
 
 -- Count how many filters are enabled in the current params
 function DialogUI.countEnabledFilters(params)
@@ -1278,6 +1276,7 @@ function DialogUI.applyToActiveLayer(sprite, params, T, duplicate, selectionOnly
   end
 
   -- Cost guard: refuse tasks this machine would choke on (instead of
+  -- Cost guard: refuse tasks this machine would choke on (instead of
   -- freezing the UI or risking a crash).
   local totalFrames = #sprite.frames
   local estimate = DialogUI.estimateOps(sprite, params, totalFrames, allFrames, selectionOnly)
@@ -1286,28 +1285,17 @@ function DialogUI.applyToActiveLayer(sprite, params, T, duplicate, selectionOnly
     return
   end
 
-  -- Progress dialog for heavy multi-frame jobs
-  local progress = nil
-  if estimate > DialogUI.PROGRESS_PIXEL_OPS and allFrames then
-    progress = Progress.show(T.dialog_title, T.progress_initial)
-  end
-
   local ok, err = pcall(function()
     app.transaction(T.txn_single, function()
       -- Per-frame animation context: expose the current frame number,
       -- total frame count, and previous frame output to the filter chain
       -- (mechanism A/B/C animation support). Cleared afterwards so saved
       -- params are never polluted.
-      local done = 0
-      local total = #frameList
       if duplicate then
         local newLayer = sprite:newLayer()
         newLayer.name = layer.name .. " CRT"
         local prevImg = nil
         for _, f in ipairs(frameList) do
-          if progress and progress.canceled() then
-            error("crt_retro_filter_canceled")
-          end
           local srcCel = layer:cel(f)
           if srcCel then
             params._frame = f
@@ -1322,17 +1310,10 @@ function DialogUI.applyToActiveLayer(sprite, params, T, duplicate, selectionOnly
             newCel.image = img
             prevImg = img
           end
-          done = done + 1
-          if progress then
-            progress.setValue(done / total, string.format("%d/%d", done, total))
-          end
         end
       else
         local prevImg = nil
         for _, f in ipairs(frameList) do
-          if progress and progress.canceled() then
-            error("crt_retro_filter_canceled")
-          end
           local celF = layer:cel(f)
           if celF then
             params._frame = f
@@ -1344,10 +1325,6 @@ function DialogUI.applyToActiveLayer(sprite, params, T, duplicate, selectionOnly
             celF.image = img
             prevImg = img
           end
-          done = done + 1
-          if progress then
-            progress.setValue(done / total, string.format("%d/%d", done, total))
-          end
         end
       end
       params._frame = nil
@@ -1356,16 +1333,10 @@ function DialogUI.applyToActiveLayer(sprite, params, T, duplicate, selectionOnly
     end)
   end)
 
-  if progress then progress.close() end
-
   if not ok then
-    if tostring(err):find("crt_retro_filter_canceled") then
-      app.alert(T.operation_canceled)
-    else
-      -- Transaction rolled back automatically; report gracefully instead
-      -- of leaving Aseprite in an undefined state.
-      app.alert(string.format("%s\n\n%s", T.operation_failed, tostring(err)))
-    end
+    -- Transaction rolled back automatically; report gracefully instead
+    -- of leaving Aseprite in an undefined state.
+    app.alert(string.format("%s\n\n%s", T.operation_failed, tostring(err)))
   end
 
   app.refresh()

@@ -7,6 +7,7 @@
 -- ============================================================
 
 local ColorUtils = require("utils.color")
+local MathUtils = require("utils.math")
 
 local RGBMask = {}
 
@@ -55,13 +56,20 @@ function RGBMask.apply(image, params)
   local maskType = params.rgb_mask_type or "grille"
   local width = params.rgb_mask_width or 1
 
+  -- Parameter animation (mechanism B): the phosphor pattern rolls to the
+  -- right one band every 6 frames.
+  local roll = 0
+  if params.anim_enabled and params._frame then
+    roll = math.floor(params._frame / 6) % 3
+  end
+
   local atten = 1.0 - intensity * 0.5
 
   for it in image:pixels() do
     local pixel = it()
     local r, g, b, a = ColorUtils.getRGBA(pixel)
 
-    local band = getMaskBand(maskType, it.x, it.y, width)
+    local band = getMaskBand(maskType, it.x + roll * width, it.y, width)
 
     if band == 0 then
       g = g * atten

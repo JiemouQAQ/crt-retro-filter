@@ -5,6 +5,7 @@
 -- ============================================================
 
 local ColorUtils = require("utils.color")
+local MathUtils = require("utils.math")
 
 local ColorTemp = {}
 
@@ -38,6 +39,11 @@ function ColorTemp.apply(image, params)
 
   local kelvin = params.color_temp_value or 6500
   local intensity = (params.color_temp_intensity or 50) / 100.0
+
+  -- Parameter animation (mechanism B): gentle warm/cool drift.
+  if params.anim_enabled and params._frame then
+    kelvin = kelvin + MathUtils.animWave(params, 90, -800, 800)
+  end
 
   if intensity <= 0 then return end
 

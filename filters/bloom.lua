@@ -134,6 +134,11 @@ function Bloom.apply(image, params)
   local intensity = params.bloom_intensity or 50
   local enabled = params.bloom_enabled
 
+  -- Parameter animation (mechanism B): the glow pulses like breathing.
+  if params.anim_enabled and params._frame then
+    intensity = intensity * (0.5 + 0.5 * MathUtils.animWave(params, 70, 0, 1))
+  end
+
   if enabled == false or intensity == 0 then
     return image:clone()
   end

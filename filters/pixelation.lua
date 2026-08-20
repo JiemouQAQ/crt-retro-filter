@@ -5,6 +5,7 @@
 -- ============================================================
 
 local ColorUtils = require("utils.color")
+local MathUtils = require("utils.math")
 
 local Pixelation = {}
 
@@ -16,6 +17,12 @@ local Pixelation = {}
 function Pixelation.apply(image, params)
   local enabled = params.pixelation_enabled
   local blockSize = params.pixelation_block_size or 2
+
+  -- Parameter animation (mechanism B): resolution flickers between the
+  -- chosen block size and one step larger every 24 frames.
+  if params.anim_enabled and params._frame then
+    blockSize = blockSize + MathUtils.animStep(params, 24, 0, 1)
+  end
 
   if enabled == false or blockSize <= 1 then
     return image:clone()

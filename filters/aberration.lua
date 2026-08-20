@@ -22,6 +22,14 @@ function Aberration.apply(image, params)
   local falloff = params.aberration_falloff or 50
   local enabled = params.aberration_enabled
 
+  -- Parameter animation (mechanism B): the channel shift pulses,
+  -- giving an RGB shimmer.
+  if params.anim_enabled and params._frame then
+    local pulse = 0.5 + 0.5 * MathUtils.animWave(params, 45, 0, 1)
+    shift_r = shift_r * pulse
+    shift_b = shift_b * pulse
+  end
+
   if enabled == false or (shift_r == 0 and shift_b == 0) then return end
 
   local w = image.width

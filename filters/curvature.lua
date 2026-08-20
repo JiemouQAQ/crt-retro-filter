@@ -57,6 +57,11 @@ function Curvature.apply(image, params)
   local corner_radius = params.curvature_corner_radius or 0
   local enabled = params.curvature_enabled
 
+  -- Parameter animation (mechanism B): slow "breathing" of the bend.
+  if params.anim_enabled and params._frame then
+    curvature = curvature * (0.7 + 0.3 * MathUtils.animWave(params, 120, 0, 1))
+  end
+
   if enabled == false or curvature == 0 then
     return image:clone()
   end

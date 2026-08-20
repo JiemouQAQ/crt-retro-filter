@@ -5,6 +5,7 @@
 -- ============================================================
 
 local ColorUtils = require("utils.color")
+local MathUtils = require("utils.math")
 
 local Ripple = {}
 
@@ -25,6 +26,12 @@ function Ripple.apply(image, params)
   local frequency = (params.ripple_frequency or 30) / 100.0
   local phase = (params.ripple_phase or 0) * math.pi / 180.0
   local falloff = (params.ripple_falloff or 0) / 100.0
+
+  -- Parameter animation (mechanism B): phase sweeps through 360 degrees
+  -- over 60 frames, making the ripple wobble like disturbed water.
+  if params.anim_enabled and params._frame then
+    phase = phase + MathUtils.animWave(params, 60, 0, 2 * math.pi)
+  end
 
   local w = image.width
   local h = image.height

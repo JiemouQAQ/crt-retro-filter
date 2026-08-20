@@ -26,6 +26,28 @@ function Persistence.apply(image, params)
   local w = image.width
   local h = image.height
 
+  -- Mechanism C: real afterglow. In per-frame evolution mode with a
+  -- previous frame available (params._prev), bright pixels from the
+  -- previous frame's final output linger, decaying by `retained` per
+  -- frame — genuine phosphor persistence across the animation.
+  if params._prev and params.anim_enabled then
+    local prev = params._prev
+    local retained = 0.05 + intensity * 0.9
+    for it in image:pixels() do
+      local old = prev:getPixel(it.x, it.y)
+      local or_, og, ob = ColorUtils.getRGBA(old)
+      if ColorUtils.luminance(or_, og, ob) > threshold then
+        local cr, cg, cb, ca = ColorUtils.getRGBA(it())
+        it(ColorUtils.makeRGBA(
+          math.max(cr, or_ * retained),
+          math.max(cg, og * retained),
+          math.max(cb, ob * retained),
+          ca))
+      end
+    end
+    return
+  end
+
   -- Horizontal blur kernel: exponentially decaying samples to the right
   -- Simulates the phosphor trail as the electron beam moves left-to-right
   local maxSamples = math.floor(1 + intensity * 8)

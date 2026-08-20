@@ -5,6 +5,24 @@ All notable changes to the CRT Retro Filter extension.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [3.9.0] - 2026-02
+
+### Added
+- **Parameter animation (mechanism B)** — with *Per-Frame Evolution* on, the classic filters now animate via built-in waveforms (no keyframes, deterministic):
+  - Horizontal Ripple: phase sweep (water wobble)
+  - Color Temperature: warm/cool drift
+  - Chromatic Aberration: channel-shift pulse
+  - Screen Curvature: slow "breathing"
+  - Bloom: glow pulse; Vignette: edge-darkening pulse
+  - Pixelation: resolution step-flicker every 24 frames
+  - RGB Phosphor Mask: pattern rolls right every 6 frames
+  - Interlacing Jitter: comb shimmer
+- **Real afterglow (mechanism C)** — Phosphor Persistence now blends the *previous frame's actual output* (params._prev) when evolving an animation, decaying by intensity — genuine phosphor persistence (falls back to the classic trail otherwise)
+- Presets tab shows a performance note ("heavy jobs take a while, please wait")
+
+### Changed
+- Removed the progress-bar dialog (per user request); heavy jobs now run with the static note instead. Task cost guard and rollback protection remain.
+
 ## [3.8.0] - 2026-02
 
 ### Added

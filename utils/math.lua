@@ -57,6 +57,25 @@ function MathUtils.animSeed(params, multiplier)
   return 0
 end
 
+-- Sine oscillation for parameter animation (mechanism B).
+-- Returns a value between min and max driven by the frame number.
+-- period: frames per full cycle; phaseDeg: phase offset in degrees.
+function MathUtils.animWave(params, period, minVal, maxVal, phaseDeg)
+  local f = params._frame or 0
+  local phase = (phaseDeg or 0) * math.pi / 180.0
+  local t = (math.sin(f * 2.0 * math.pi / period + phase) + 1.0) / 2.0 -- 0..1
+  return minVal + (maxVal - minVal) * t
+end
+
+-- Square-wave step for parameter animation (mechanism B).
+-- Returns minVal or maxVal, alternating every `period` frames.
+function MathUtils.animStep(params, period, minVal, maxVal, phaseFrames)
+  local f = params._frame or 0
+  local step = math.floor((f + (phaseFrames or 0)) / period) % 2
+  if step == 0 then return minVal end
+  return maxVal
+end
+
 -- Fast pseudo-random hash returning [0, 1) from integer coordinates
 -- Uses Knuth multiplicative hash, pure integer arithmetic (no bit32 needed)
 function MathUtils.fastHash(x, y, seed)

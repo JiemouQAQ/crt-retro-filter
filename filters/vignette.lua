@@ -5,6 +5,7 @@
 -- ============================================================
 
 local ColorUtils = require("utils.color")
+local MathUtils = require("utils.math")
 
 local Vignette = {}
 
@@ -20,6 +21,11 @@ function Vignette.apply(image, params)
   local softness = params.vignette_softness or 50
   local enabled = params.vignette_enabled
   local ratio = params.vignette_ratio or "auto"
+
+  -- Parameter animation (mechanism B): gentle edge-darkening pulse.
+  if params.anim_enabled and params._frame then
+    intensity = intensity * (0.6 + 0.4 * MathUtils.animWave(params, 80, 0, 1))
+  end
 
   if enabled == false or intensity == 0 then return end
 

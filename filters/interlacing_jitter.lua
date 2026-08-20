@@ -6,6 +6,7 @@
 -- ============================================================
 
 local ColorUtils = require("utils.color")
+local MathUtils = require("utils.math")
 
 local Jitter = {}
 
@@ -20,6 +21,11 @@ function Jitter.apply(image, params)
 
   local intensity = params.jitter_intensity or 20
   if intensity <= 0 then return end
+
+  -- Parameter animation (mechanism B): the comb shimmer pulses.
+  if params.anim_enabled and params._frame then
+    intensity = intensity * (0.5 + 0.5 * MathUtils.animWave(params, 30, 0, 1))
+  end
 
   local direction = params.jitter_direction or "horizontal"
   local displacement = intensity / 25.0  -- scale to 0-4px range
