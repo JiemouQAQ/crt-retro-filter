@@ -30,7 +30,7 @@ local ColorUtils = require("utils.color")
 local DialogUI = {}
 
 -- Displayed in the dialog title; keep in sync with package.json
-local PLUGIN_VERSION = "3.11.1"
+local PLUGIN_VERSION = "3.11.2"
 
 -- ============================================================
 -- Preview state
@@ -664,12 +664,15 @@ function DialogUI.show(plugin)
 
 	  previewImg = originalPreview:clone()
 	  -- Per-frame evolution preview: use the current frame number so the
-	  -- preview matches the exact frame the user is on.
+	  -- preview matches the exact frame the user is on. Also pass the
+	  -- preview scale so pixel-unit filter params are compensated.
 	  params._frame = cel.frame.frameNumber
 	  params._frames = app.activeSprite and #app.activeSprite.frames or 1
+	  params._preview_scale = previewScale
 	  previewImg = DialogUI.applyFilters(previewImg, params)
 	  params._frame = nil
 	  params._frames = nil
+	  params._preview_scale = nil
 	  applySelectionMask()
 	  dlg:repaint()
 	end

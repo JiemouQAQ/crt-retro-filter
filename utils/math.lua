@@ -57,6 +57,25 @@ function MathUtils.animSeed(params, multiplier)
   return 0
 end
 
+-- Scale a pixel-unit parameter for the on-canvas preview.
+-- The preview is rendered from a downscaled copy (params._preview_scale
+-- = previewSize / imageSize), so fixed-pixel parameters (band thickness,
+-- block size, mask width, pixelation block, corner radius, ...) would
+-- otherwise look proportionally larger in the preview than in the real
+-- apply. This converts them to the equivalent value at preview scale,
+-- keeping at least a 1 px step so the effect stays visible.
+-- Returns the value unchanged when not previewing.
+function MathUtils.previewParam(params, value)
+  if value == 0 then return 0 end
+  local s = params._preview_scale
+  if s and s > 0 and s < 1 then
+    local v = math.abs(value) * s
+    if v < 1 then v = 1 end
+    return (value < 0) and -v or v
+  end
+  return value
+end
+
 -- Sine oscillation for parameter animation (mechanism B).
 -- Returns a value between min and max driven by the frame number.
 -- period: frames per full cycle; phaseDeg: phase offset in degrees.

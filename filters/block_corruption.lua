@@ -19,7 +19,7 @@ local BlockCorruption = {}
 function BlockCorruption.apply(image, params)
   if params.block_corruption_enabled == false then return end
   local density = params.block_corruption_density or 30
-  local size = math.max(1, params.block_corruption_size or 2)
+  local size = math.max(1, MathUtils.previewParam(params, params.block_corruption_size or 2))
   local shift = params.block_corruption_shift or 50
   if shift <= 0 then return end
 

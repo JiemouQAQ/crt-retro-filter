@@ -20,7 +20,7 @@ function SliceShift.apply(image, params)
   if params.slice_shift_enabled == false then return end
   local intensity = params.slice_shift_intensity or 50
   local density = params.slice_shift_density or 40
-  local thickness = math.max(1, params.slice_shift_thickness or 2)
+  local thickness = math.max(1, MathUtils.previewParam(params, params.slice_shift_thickness or 2))
   if intensity <= 0 then return end
 
   local w = image.width

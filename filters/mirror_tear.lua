@@ -18,7 +18,7 @@ local MirrorTear = {}
 --   mirror_tear_direction: "horizontal" | "vertical"
 function MirrorTear.apply(image, params)
   if params.mirror_tear_enabled == false then return end
-  local intensity = params.mirror_tear_intensity or 50
+  local intensity = MathUtils.previewParam(params, params.mirror_tear_intensity or 50)
   local density = params.mirror_tear_density or 40
   local direction = params.mirror_tear_direction or "horizontal"
   if intensity <= 0 then return end

@@ -16,7 +16,7 @@ local Pixelation = {}
 --   pixelation_block_size: 1-8 (pixel block dimension)
 function Pixelation.apply(image, params)
   local enabled = params.pixelation_enabled
-  local blockSize = params.pixelation_block_size or 2
+  local blockSize = MathUtils.previewParam(params, params.pixelation_block_size or 2)
 
   -- Parameter animation (mechanism B): resolution flickers between the
   -- chosen block size and one step larger every 24 frames.

@@ -19,7 +19,7 @@ local TrackingBand = {}
 function TrackingBand.apply(image, params)
   if params.tracking_band_enabled == false then return end
   local intensity = params.tracking_band_intensity or 50
-  local width = math.max(1, params.tracking_band_width or 4)
+  local width = math.max(1, MathUtils.previewParam(params, params.tracking_band_width or 4))
   local position = params.tracking_band_position or 50
   if intensity <= 0 then return end
 

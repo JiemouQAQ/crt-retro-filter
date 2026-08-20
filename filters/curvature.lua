@@ -61,7 +61,7 @@ end
 --     (capped at 50% of the image's short side)
 function Curvature.apply(image, params)
   local curvature = params.curvature_amount or 30
-  local corner_radius = params.curvature_corner_radius or 0
+  local corner_radius = MathUtils.previewParam(params, params.curvature_corner_radius or 0)
   local enabled = params.curvature_enabled
 
   -- Parameter animation (mechanism B): slow "breathing" of the bend.

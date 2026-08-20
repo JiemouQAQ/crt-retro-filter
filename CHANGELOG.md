@@ -5,6 +5,11 @@ All notable changes to the CRT Retro Filter extension.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [3.11.2] - 2026-02
+
+### Changed
+- **Preview accuracy**: the on-canvas preview is rendered from a downscaled copy, so fixed-pixel parameters (slice thickness, block size, tracking-band width, displacement cell, mirror strip, pixelation block, aberration shift, corner radius) now get **scale-compensated** during preview — the preview shows the same proportional effect as the real apply (position/size consistency). Non-preview behavior is unchanged.
+
 ## [3.11.1] - 2026-02
 
 ### Changed

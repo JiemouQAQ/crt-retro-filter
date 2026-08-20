@@ -19,7 +19,7 @@ local Displacement = {}
 function Displacement.apply(image, params)
   if params.displacement_enabled == false then return end
   local intensity = params.displacement_intensity or 30
-  local scale = params.displacement_scale or 60
+  local scale = MathUtils.previewParam(params, params.displacement_scale or 60)
   local direction = params.displacement_direction or "both"
   if intensity <= 0 then return end
 
