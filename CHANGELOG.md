@@ -5,6 +5,11 @@ All notable changes to the CRT Retro Filter extension.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [3.10.1] - 2026-02
+
+### Changed
+- **Screen Curvature** simplified to the early "CRT screen" behavior: **concave (inward) only** — the slider is now 0–100 (inward depth), and the strength is capped so the picture keeps its shape. The filter strictly preserves the canvas size and aspect ratio: no cropping, no transparent holes, full picture always visible.
+
 ## [3.10.0] - 2026-02
 
 ### Fixed
