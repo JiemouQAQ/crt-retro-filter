@@ -18,17 +18,21 @@ local function luma(pixel)
   return 0.2126 * r + 0.7152 * g + 0.0722 * b
 end
 
--- Insertion sort by luminance (ascending)
-local function sortRun(values)
+-- Insertion sort by luminance (ascending). Lumas are precomputed so
+-- the sort only does array reads, keeping the exact same result as
+-- before with far fewer per-pixel color calls.
+local function sortRun(values, lumas)
   for i = 2, #values do
     local v = values[i]
-    local lv = luma(v)
+    local lv = lumas[i]
     local j = i - 1
-    while j >= 1 and luma(values[j]) > lv do
+    while j >= 1 and lumas[j] > lv do
       values[j + 1] = values[j]
+      lumas[j + 1] = lumas[j]
       j = j - 1
     end
     values[j + 1] = v
+    lumas[j + 1] = lv
   end
 end
 
@@ -58,12 +62,15 @@ function PixelSorting.apply(image, params)
     while i < n do
       if luma(get(i)) > threshold then
         local run = {}
+        local lumas = {}
         while i < n and luma(get(i)) > threshold do
-          run[#run + 1] = get(i)
+          local p = get(i)
+          run[#run + 1] = p
+          lumas[#lumas + 1] = luma(p)
           i = i + 1
         end
         if #run > 1 then
-          sortRun(run)
+          sortRun(run, lumas)
           local start = i - #run
           for j = 1, #run do
             set(start + j - 1, run[j])

@@ -39,6 +39,7 @@ Render your pixel art through the lens of a classic CRT display. 18 independent 
 - **Selection Support** — Apply filters to the selected area only, leaving pixels outside untouched
 - **Apply to All Frames** — Process every frame of the active layer in one click, grouped into a single undo step
 - **Per-Frame Evolution** — When enabled, noise and all 6 glitch filters change their pattern with the frame number (deterministic: rerunning the animation reproduces it exactly), the VHS tracking band scrolls, and Scanlines can add classic interlace flicker — dynamic glitch / film-grain animation via *Apply to All Frames*
+- **Progress & Task Protection** — heavy jobs show a live progress bar (cancelable); oversized tasks are refused with a clear message, and any failure rolls back automatically — no freezes or crashes
 - **Bilingual** — Full English and Chinese (中文) interface, switchable in the dialog
 - **Quick Apply** — Re-apply last saved settings without opening the dialog
 - **Keyboard Shortcut** — Bind custom hotkeys to Quick Apply and Randomize (no defaults; e.g. `Ctrl+Shift+Q` / `Ctrl+Shift+R`)
@@ -311,6 +312,8 @@ Check **"Apply to All Frames"** to run the filter chain on **every frame** of th
 **Making animation**: also check **"Per-Frame Evolution"** — noise and glitch patterns now change with the frame number: Slice Shift / Block Corruption / Pixel Sorting / Displacement / Mirror Tear get a fresh pattern each frame, the VHS Tracking Band scrolls down, and Noise becomes film grain. All evolution is deterministic (rerunning the animation reproduces it exactly), and the dialog preview shows the **current frame**'s result. **Interlace Flicker** on the Scanlines filter can be enabled separately for the classic CRT shimmer.
 
 > Tip: to keep some filters static while others evolve, disable those filters or use **Fixed Noise**.
+
+**Heavy-task protection**: before applying, the plugin estimates the workload — jobs that would take minutes are **refused with a clear message** (suggestions: smaller canvas / fewer frames / fewer filters); normal heavy jobs show a **progress bar** (Cancel rolls everything back, leaving no half-applied state); any failure rolls the transaction back and reports the error instead of crashing Aseprite.
 
 ## Filter Reference
 

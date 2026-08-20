@@ -26,11 +26,12 @@ local Displacement = require("filters.displacement")
 local MirrorTear = require("filters.mirror_tear")
 local Lang = require("utils.lang")
 local ColorUtils = require("utils.color")
+local Progress = require("ui.progress")
 
 local DialogUI = {}
 
 -- Displayed in the dialog title; keep in sync with package.json
-local PLUGIN_VERSION = "3.7.0"
+local PLUGIN_VERSION = "3.8.0"
 
 -- ============================================================
 -- Preview state
@@ -1164,6 +1165,15 @@ function DialogUI.maskToSelection(filtered, original, selection, celPos)
   local h = filtered.height
   local ox = celPos and celPos.x or 0
   local oy = celPos and celPos.y or 0
+
+  -- Fast path: if the selection covers the whole image, nothing needs to
+  -- be restored — skip the full-image pass entirely.
+  local sb = selection.bounds
+  if sb and sb.x <= ox and sb.y <= oy and
+     sb.x + sb.width >= ox + w and sb.y + sb.height >= oy + h then
+    return filtered
+  end
+
   for y = 0, h - 1 do
     for x = 0, w - 1 do
       if not selection:contains(x + ox, y + oy) then
@@ -1172,6 +1182,45 @@ function DialogUI.maskToSelection(filtered, original, selection, celPos)
     end
   end
   return filtered
+end
+
+-- ============================================================
+-- Performance guards & helpers
+-- ============================================================
+
+-- Rough cost guard: if the estimated pixel-filter operations exceed this
+-- the task is refused (the UI would otherwise freeze for minutes).
+DialogUI.MAX_PIXEL_OPS = 150000000
+-- Show the progress dialog once the estimate passes this threshold.
+DialogUI.PROGRESS_PIXEL_OPS = 15000000
+
+-- Count how many filters are enabled in the current params
+function DialogUI.countEnabledFilters(params)
+  local n = 0
+  for _, k in ipairs(paramKeys) do
+    if k:match("_enabled$") and params[k] then
+      n = n + 1
+    end
+  end
+  return n
+end
+
+-- Estimate total pixel-filter operations for the given apply task.
+-- ops = pixels x frames x (enabled filters + mask/blend passes)
+function DialogUI.estimateOps(sprite, params, frameCount, allFrames, selectionOnly)
+  local pixels = sprite.width * sprite.height
+  local frames = allFrames and frameCount or 1
+  local enabled = DialogUI.countEnabledFilters(params)
+  local passes = enabled
+  local strength = params.global_strength
+  if strength ~= nil and strength > 0 and strength < 100 then
+    passes = passes + 1
+  end
+  if selectionOnly then
+    passes = passes + 1
+  end
+  if passes <= 0 then return 0 end
+  return pixels * frames * passes
 end
 
 -- ============================================================
@@ -1201,6 +1250,11 @@ function DialogUI.applyToActiveLayer(sprite, params, T, duplicate, selectionOnly
     return
   end
 
+  -- Nothing to do if no filter is enabled
+  if DialogUI.countEnabledFilters(params) == 0 then
+    return
+  end
+
   -- Resolve the pixel selection (only when requested)
   local selection = nil
   if selectionOnly then
@@ -1223,52 +1277,96 @@ function DialogUI.applyToActiveLayer(sprite, params, T, duplicate, selectionOnly
     frameList[1] = cel.frame.frameNumber
   end
 
-  app.transaction(T.txn_single, function()
-    -- Per-frame animation context: expose the current frame number,
-    -- total frame count, and previous frame output to the filter chain
-    -- (mechanism A/B/C animation support). Cleared afterwards so saved
-    -- params are never polluted.
-    local totalFrames = #sprite.frames
-    if duplicate then
-      local newLayer = sprite:newLayer()
-      newLayer.name = layer.name .. " CRT"
-      local prevImg = nil
-      for _, f in ipairs(frameList) do
-        local srcCel = layer:cel(f)
-        if srcCel then
-          params._frame = f
-          params._frames = totalFrames
-          params._prev = prevImg
-          local newCel = sprite:newCel(newLayer, f)
-          newCel.image = srcCel.image:clone()
-          newCel.position = srcCel.position
-          local img = newCel.image:clone()
-          img = DialogUI.applyFilters(img, params)
-          if selection then img = DialogUI.maskToSelection(img, srcCel.image, selection, newCel.position) end
-          newCel.image = img
-          prevImg = img
+  -- Cost guard: refuse tasks this machine would choke on (instead of
+  -- freezing the UI or risking a crash).
+  local totalFrames = #sprite.frames
+  local estimate = DialogUI.estimateOps(sprite, params, totalFrames, allFrames, selectionOnly)
+  if estimate > DialogUI.MAX_PIXEL_OPS then
+    app.alert(T.task_too_heavy)
+    return
+  end
+
+  -- Progress dialog for heavy multi-frame jobs
+  local progress = nil
+  if estimate > DialogUI.PROGRESS_PIXEL_OPS and allFrames then
+    progress = Progress.show(T.dialog_title, T.progress_initial)
+  end
+
+  local ok, err = pcall(function()
+    app.transaction(T.txn_single, function()
+      -- Per-frame animation context: expose the current frame number,
+      -- total frame count, and previous frame output to the filter chain
+      -- (mechanism A/B/C animation support). Cleared afterwards so saved
+      -- params are never polluted.
+      local done = 0
+      local total = #frameList
+      if duplicate then
+        local newLayer = sprite:newLayer()
+        newLayer.name = layer.name .. " CRT"
+        local prevImg = nil
+        for _, f in ipairs(frameList) do
+          if progress and progress.canceled() then
+            error("crt_retro_filter_canceled")
+          end
+          local srcCel = layer:cel(f)
+          if srcCel then
+            params._frame = f
+            params._frames = totalFrames
+            params._prev = prevImg
+            local newCel = sprite:newCel(newLayer, f)
+            newCel.image = srcCel.image:clone()
+            newCel.position = srcCel.position
+            local img = newCel.image:clone()
+            img = DialogUI.applyFilters(img, params)
+            if selection then img = DialogUI.maskToSelection(img, srcCel.image, selection, newCel.position) end
+            newCel.image = img
+            prevImg = img
+          end
+          done = done + 1
+          if progress then
+            progress.setValue(done / total, string.format("%d/%d", done, total))
+          end
+        end
+      else
+        local prevImg = nil
+        for _, f in ipairs(frameList) do
+          if progress and progress.canceled() then
+            error("crt_retro_filter_canceled")
+          end
+          local celF = layer:cel(f)
+          if celF then
+            params._frame = f
+            params._frames = totalFrames
+            params._prev = prevImg
+            local img = celF.image:clone()
+            img = DialogUI.applyFilters(img, params)
+            if selection then img = DialogUI.maskToSelection(img, celF.image, selection, celF.position) end
+            celF.image = img
+            prevImg = img
+          end
+          done = done + 1
+          if progress then
+            progress.setValue(done / total, string.format("%d/%d", done, total))
+          end
         end
       end
-    else
-      local prevImg = nil
-      for _, f in ipairs(frameList) do
-        local celF = layer:cel(f)
-        if celF then
-          params._frame = f
-          params._frames = totalFrames
-          params._prev = prevImg
-          local img = celF.image:clone()
-          img = DialogUI.applyFilters(img, params)
-          if selection then img = DialogUI.maskToSelection(img, celF.image, selection, celF.position) end
-          celF.image = img
-          prevImg = img
-        end
-      end
-    end
-    params._frame = nil
-    params._frames = nil
-    params._prev = nil
+      params._frame = nil
+      params._frames = nil
+      params._prev = nil
+    end)
   end)
+
+  if progress then progress.close() end
+
+  if not ok then
+    if tostring(err):find("crt_retro_filter_canceled") then
+      app.alert(T.operation_canceled)
+    else
+      -- Transaction rolled back automatically; report gracefully instead
+      -- of leaving Aseprite in an undefined state.
+      app.alert(string.format("%s\n\n%s", T.operation_failed, tostring(err)))
+    end
+  end
 
   app.refresh()
 end

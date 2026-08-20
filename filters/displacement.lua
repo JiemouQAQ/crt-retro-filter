@@ -33,22 +33,39 @@ function Displacement.apply(image, params)
   local maxOff = math.max(1, math.floor(intensity / 100.0 * w * 0.15))
   local seed = 31337 + animOffset
 
+  -- Precompute one offset per noise cell (offsets depend only on cell
+  -- coordinates, not on the pixel) — this turns ~2 hash calls per pixel
+  -- into ~2 per cell, a large win on big images. Results are identical.
+  local cols = math.ceil(w / cell)
+  local rows = math.ceil(h / cell)
+  local offX = {}
+  local offY = {}
+  local idx = 0
+  for cy = 0, rows - 1 do
+    for cx = 0, cols - 1 do
+      idx = idx + 1
+      offX[idx] = (MathUtils.fastHash(cx, cy, seed) - 0.5) * 2 * maxOff
+      offY[idx] = (MathUtils.fastHash(cx, cy, seed + 1) - 0.5) * 2 * maxOff
+    end
+  end
+
   for y = 0, h - 1 do
     local cy = math.floor(y / cell)
     for x = 0, w - 1 do
       local cx = math.floor(x / cell)
-      local offX = (MathUtils.fastHash(cx, cy, seed) - 0.5) * 2 * maxOff
-      local offY = (MathUtils.fastHash(cx, cy, seed + 1) - 0.5) * 2 * maxOff
+      local ci = cy * cols + cx + 1
+      local offXv = offX[ci]
+      local offYv = offY[ci]
 
       local sx = x
       local sy = y
       if direction == "horizontal" then
-        sx = x + offX
+        sx = x + offXv
       elseif direction == "vertical" then
-        sy = y + offY
+        sy = y + offYv
       else
-        sx = x + offX
-        sy = y + offY
+        sx = x + offXv
+        sy = y + offYv
       end
 
       sx = math.max(0, math.min(w - 1, math.floor(sx + 0.5)))

@@ -148,6 +148,12 @@ local strings = {
 
     -- Transaction names
     txn_single = "CRT Retro Filter",
+
+    -- Progress / errors
+    progress_initial = "Processing...",
+    task_too_heavy = "This task is too heavy for your machine and was stopped before starting.\n\nSuggested fixes:\n- Use a smaller canvas or fewer animation frames\n- Enable fewer filters\n- Lower the Preset Strength",
+    operation_canceled = "Operation canceled. No changes were applied.",
+    operation_failed = "The operation failed and was rolled back (no changes were applied).\n\nError details:",
   },
 
   zh = {
@@ -292,6 +298,12 @@ local strings = {
 
     -- Transaction names
     txn_single = "CRT 复古滤镜",
+
+    -- Progress / errors
+    progress_initial = "正在处理...",
+    task_too_heavy = "任务对当前计算机来说过重，已主动终止（未做任何改动）。\n\n建议：\n- 缩小画布或减少动画帧数\n- 减少启用的滤镜数量\n- 降低「预设强度」",
+    operation_canceled = "操作已取消，未做任何改动。",
+    operation_failed = "处理失败，已自动回滚（未做任何改动）。\n\n错误详情：",
   },
 }
 

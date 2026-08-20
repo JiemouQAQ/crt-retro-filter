@@ -162,8 +162,9 @@ function Bloom.apply(image, params)
   -- Step 5: Upscale back to original size
   local blurred = upscale(blurredSmall, w, h)
 
-  -- Step 6: Blend blurred bright pixels back onto original
-  local result = image:clone()
+  -- Step 6: Blend blurred bright pixels back onto the image (the input
+  -- is a working copy, so it can be modified in place — saves a clone)
+  local result = image
   local blend_factor = intensity / 100.0
 
   for it in result:pixels() do

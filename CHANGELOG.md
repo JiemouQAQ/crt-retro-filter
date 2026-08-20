@@ -5,6 +5,23 @@ All notable changes to the CRT Retro Filter extension.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [3.8.0] - 2026-02
+
+### Added
+- **Progress bar** for heavy multi-frame jobs: a non-blocking dialog shows frame progress while "Apply to All Frames" runs (with a best-effort Cancel button)
+- **Task cost guard**: before starting, the plugin estimates the pixel-filter workload; tasks estimated to take minutes are refused with a clear message instead of freezing the UI (suggestions: smaller canvas / fewer frames / fewer filters / lower strength)
+- **Crash protection**: the whole apply pipeline is wrapped in error handling — failures roll back the transaction and show the error instead of leaving Aseprite in an undefined state
+- No-op fast paths: applying with zero enabled filters does nothing (no wasted work)
+
+### Changed (performance, stability-first)
+- **Displacement** now caches per-cell offsets (~2 hash calls per cell instead of per pixel; identical results)
+- **Pixel Sorting** precomputes run luminances (fewer per-pixel color calls; identical results)
+- **Bloom** blends into the working buffer instead of cloning it (one less full-image clone)
+- **Selection mask** skips its full pass when the selection covers the whole image
+
+### Fixed
+- (internal) selection mask fast-path coverage check
+
 ## [3.7.0] - 2026-02
 
 ### Added
