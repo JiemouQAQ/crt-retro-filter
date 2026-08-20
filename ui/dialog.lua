@@ -30,7 +30,7 @@ local ColorUtils = require("utils.color")
 local DialogUI = {}
 
 -- Displayed in the dialog title; keep in sync with package.json
-local PLUGIN_VERSION = "3.9.1"
+local PLUGIN_VERSION = "3.9.2"
 
 -- ============================================================
 -- Preview state
@@ -321,16 +321,16 @@ local function applyPresetToDialog(dlg, preset_params, params, T)
       pcall(function() dlg:modify{ id = k, value = v } end)
     elseif k == "rgb_mask_type" then
       local label = (v == "shadow") and T.mask_shadow or (v == "slot") and T.mask_slot or T.mask_grille
-      pcall(function() dlg:modify{ id = k, text = label } end)
+      pcall(function() dlg:modify{ id = k, option = label } end)
     elseif k == "jitter_direction" then
       local label = (v == "vertical") and T.dir_vertical or T.dir_horizontal
-      pcall(function() dlg:modify{ id = k, text = label } end)
+      pcall(function() dlg:modify{ id = k, option = label } end)
     elseif k == "pixel_sorting_direction" or k == "displacement_direction" or k == "mirror_tear_direction" then
       local label = (v == "vertical") and T.dir_vertical or (v == "both") and T.dir_both or T.dir_horizontal
-      pcall(function() dlg:modify{ id = k, text = label } end)
+      pcall(function() dlg:modify{ id = k, option = label } end)
     elseif k == "vignette_ratio" then
       local label = (v == "1:1" and T.ratio_1_1 or v == "4:3" and T.ratio_4_3 or v == "16:9" and T.ratio_16_9 or T.ratio_auto)
-      pcall(function() dlg:modify{ id = k, text = label } end)
+      pcall(function() dlg:modify{ id = k, option = label } end)
     elseif type(v) == "boolean" then
       pcall(function() dlg:modify{ id = k, selected = v } end)
     else
@@ -1110,16 +1110,16 @@ function DialogUI.show(plugin)
         params[k] = v
         if k == "rgb_mask_type" then
           local label = (v == "shadow") and T.mask_shadow or (v == "slot") and T.mask_slot or T.mask_grille
-          pcall(function() dlg:modify{ id = k, text = label } end)
+          pcall(function() dlg:modify{ id = k, option = label } end)
         elseif k == "jitter_direction" then
           local label = (v == "vertical") and T.dir_vertical or T.dir_horizontal
-          pcall(function() dlg:modify{ id = k, text = label } end)
+          pcall(function() dlg:modify{ id = k, option = label } end)
         elseif k == "pixel_sorting_direction" or k == "displacement_direction" or k == "mirror_tear_direction" then
           local label = (v == "vertical") and T.dir_vertical or (v == "both") and T.dir_both or T.dir_horizontal
-          pcall(function() dlg:modify{ id = k, text = label } end)
+          pcall(function() dlg:modify{ id = k, option = label } end)
         elseif k == "vignette_ratio" then
           local label = (v == "1:1" and T.ratio_1_1 or v == "4:3" and T.ratio_4_3 or v == "16:9" and T.ratio_16_9 or T.ratio_auto)
-          pcall(function() dlg:modify{ id = k, text = label } end)
+          pcall(function() dlg:modify{ id = k, option = label } end)
         elseif type(v) == "boolean" then
           pcall(function() dlg:modify{ id = k, selected = v } end)
         else

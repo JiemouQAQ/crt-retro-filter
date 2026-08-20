@@ -5,6 +5,11 @@ All notable changes to the CRT Retro Filter extension.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [3.9.2] - 2026-02
+
+### Fixed
+- Randomize and preset switching now update the **combobox widgets visually** (mask type, directions, vignette ratio). Previously only the underlying params changed — the dropdowns displayed stale values because the wrong `modify` property (`text` instead of `option`) was used.
+
 ## [3.9.1] - 2026-02
 
 ### Changed
