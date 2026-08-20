@@ -30,7 +30,7 @@ local ColorUtils = require("utils.color")
 local DialogUI = {}
 
 -- Displayed in the dialog title; keep in sync with package.json
-local PLUGIN_VERSION = "3.6.1"
+local PLUGIN_VERSION = "3.6.2"
 
 -- ============================================================
 -- Preview state
@@ -899,9 +899,11 @@ function DialogUI.show(plugin)
     onchange = function() updatePreview() end }
   dlg:slider{ id = "noise_grain_size", label = T.grain, min = 1, max = 4, value = params.noise_grain_size, hexpand = true,
     onchange = function() updatePreview() end }
-  dlg:check{ id = "noise_monochrome", label = T.monochrome, selected = params.noise_monochrome,
+  -- Monochrome + Fixed Noise share one row (text instead of label so
+  -- they join the same hbox)
+  dlg:check{ id = "noise_monochrome", text = T.monochrome, selected = params.noise_monochrome,
     onclick = function() updatePreview() end }
-  dlg:check{ id = "noise_fixed", label = T.noise_fixed, selected = params.noise_fixed,
+  dlg:check{ id = "noise_fixed", text = T.noise_fixed, selected = params.noise_fixed,
     onclick = function() updatePreview() end }
 
   -- ===== Tab: Pixel =====

@@ -96,8 +96,8 @@ local strings = {
     ratio_16_9 = "16:9",
     sep_noise = "Noise / Static",
     grain = "Grain:",
-    monochrome = "Monochrome:",
-    noise_fixed = "Fixed Noise:",
+    monochrome = "Monochrome",
+    noise_fixed = "Fixed Noise",
 
     -- Pixel tab
     sep_color_temp = "Color Temperature",
@@ -238,8 +238,8 @@ local strings = {
     ratio_16_9 = "16:9",
     sep_noise = "噪点",
     grain = "颗粒:",
-    monochrome = "单色:",
-    noise_fixed = "固定噪点:",
+    monochrome = "单色",
+    noise_fixed = "固定噪点",
 
     -- Pixel tab
     sep_color_temp = "色温",
