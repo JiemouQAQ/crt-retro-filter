@@ -41,7 +41,7 @@ local strings = {
     all_frames = "Apply to All Frames:",
     no_selection = "No active selection. Create a selection first, or uncheck Selection Only.",
     compare_orig = "Compare Original",
-    compare_hint = "Hold the preview with the left mouse button to peek at the original",
+    compare_hint = "hold the mouse button to peek",
 
     -- Preset descriptions
     preset_arcade_name = "Classic Arcade",
@@ -183,7 +183,7 @@ local strings = {
     all_frames = "应用到全部帧:",
     no_selection = "没有活动的选区，请先创建选区，或取消勾选「只应用到选区」。",
     compare_orig = "对比原图",
-    compare_hint = "按住预览画布（鼠标左键）可临时查看原图",
+    compare_hint = "按住鼠标左键可临时查看",
 
     -- Preset descriptions
     preset_arcade_name = "经典街机",

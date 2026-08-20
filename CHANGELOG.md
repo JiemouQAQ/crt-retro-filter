@@ -5,6 +5,16 @@ All notable changes to the CRT Retro Filter extension.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [3.6.1] - 2026-02
+
+### Fixed
+- **Disable All** button now also disables the 6 glitch filters (previously only the original 12); the enable-key list is now derived from the parameter table so future filters are covered automatically
+
+### Changed
+- Edit menu commands grouped into a **CRT Retro Filter** submenu (Open Dialog… / Quick Apply / Randomize), with a fallback to the flat menu on older Aseprite versions; command IDs unchanged so bound keyboard shortcuts keep working
+- **Quick Apply** and **Randomize** have no default shortcuts (as before) but are fully bindable via **Edit → Keyboard Shortcuts**
+- Dialog polish: Disable All + Reset Default buttons share one row; Compare Original hint folded into its label
+
 ## [3.6.0] - 2026-02
 
 ### Added

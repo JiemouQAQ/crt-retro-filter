@@ -30,7 +30,7 @@ local ColorUtils = require("utils.color")
 local DialogUI = {}
 
 -- Displayed in the dialog title; keep in sync with package.json
-local PLUGIN_VERSION = "3.6.0"
+local PLUGIN_VERSION = "3.6.1"
 
 -- ============================================================
 -- Preview state
@@ -610,14 +610,13 @@ function DialogUI.show(plugin)
     end
   }
 
-  -- Compare controls
-  dlg:check{ id = "compare_orig", label = T.compare_orig, selected = false,
+  -- Compare controls (hint folded into the label to save a row)
+  dlg:check{ id = "compare_orig", label = T.compare_orig .. "  (" .. T.compare_hint .. ")", selected = false,
     onclick = function()
       compareLock = dlg.data.compare_orig
       dlg:repaint()
     end
   }
-  dlg:label{ text = "  " .. T.compare_hint }
 
   -- ===== Real-time preview update with change detection =====
 	-- Restore original preview pixels outside the selection.
@@ -722,14 +721,18 @@ function DialogUI.show(plugin)
   }
   dlg:check{ id = "all_frames", label = T.all_frames, selected = prefs.all_frames or false }
 
-  dlg:button{ id = "disable_all", text = T.disable_all_btn, hexpand = false,
+  -- Disable All / Reset Default on one row
+  dlg:newrow()
+  dlg:button{ id = "disable_all", text = T.disable_all_btn, hexpand = true,
     onclick = function()
-      local enabled_keys = {
-        "scanlines_enabled", "curvature_enabled", "aberration_enabled",
-        "vignette_enabled", "bloom_enabled", "noise_enabled",
-        "color_temp_enabled", "pixelation_enabled", "rgb_mask_enabled",
-        "ripple_enabled", "jitter_enabled", "persistence_enabled"
-      }
+      -- Derive every filter enable key from paramKeys so the button
+      -- always covers all current (and future) filters.
+      local enabled_keys = {}
+      for _, k in ipairs(paramKeys) do
+        if k:match("_enabled$") then
+          enabled_keys[#enabled_keys + 1] = k
+        end
+      end
       for _, k in ipairs(enabled_keys) do
         params[k] = false
         pcall(function() dlg:modify{ id = k, selected = false } end)
@@ -738,7 +741,7 @@ function DialogUI.show(plugin)
       dlg:repaint()
     end
   }
-  dlg:button{ id = "reset_default", text = T.reset_default_btn, hexpand = false,
+  dlg:button{ id = "reset_default", text = T.reset_default_btn, hexpand = true,
     onclick = function()
       applyPresetToDialog(dlg, {}, params, T)
       updatePreview()

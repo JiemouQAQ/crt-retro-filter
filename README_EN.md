@@ -40,7 +40,7 @@ Render your pixel art through the lens of a classic CRT display. 18 independent 
 - **Apply to All Frames** — Process every frame of the active layer in one click, grouped into a single undo step
 - **Bilingual** — Full English and Chinese (中文) interface, switchable in the dialog
 - **Quick Apply** — Re-apply last saved settings without opening the dialog
-- **Keyboard Shortcut** — Bind a hotkey to the Randomize command for rapid experimentation
+- **Keyboard Shortcut** — Bind custom hotkeys to Quick Apply and Randomize (no defaults; e.g. `Ctrl+Shift+Q` / `Ctrl+Shift+R`)
 
 ## Showcase
 
@@ -246,15 +246,17 @@ Render your pixel art through the lens of a classic CRT display. 18 independent 
 
 ### Open the Dialog
 
-**Edit → CRT Retro Filter** opens the parameter panel. Menu items are grayed out when no image is open.
+**Edit → CRT Retro Filter → Open Dialog…** opens the parameter panel. Menu items are grayed out when no image is open.
 
 ### Quick Apply
 
-**Edit → CRT Retro Filter (Quick Apply)** re-applies the last saved settings directly to the active layer.
+**Edit → CRT Retro Filter → Quick Apply** re-applies the last saved settings directly to the active layer.
 
 ### Randomize
 
-**Edit → CRT Retro Filter (Randomize)** applies a randomly generated filter configuration. Bind a keyboard shortcut (e.g., `Ctrl+Shift+R`) in **Edit → Keyboard Shortcuts**.
+**Edit → CRT Retro Filter → Randomize** applies a randomly generated filter configuration.
+
+> The extension defines no default shortcuts, but every command (Open Dialog / Quick Apply / Randomize) can be bound in **Edit → Keyboard Shortcuts** by searching for **CRT Retro Filter** — e.g. `Ctrl+Shift+R` for Randomize, `Ctrl+Shift+Q` for Quick Apply.
 
 ### Dialog Layout
 
@@ -521,9 +523,9 @@ The preview is computed on canvas in real time, so large sprites cost more. Try:
 
 All changes are grouped into a **single** undo step when you click **Apply** — press `Ctrl+Z` (`Cmd+Z` on macOS) to revert everything at once.
 
-### How do I bind a shortcut to Randomize?
+### How do I bind a shortcut to Quick Apply / Randomize?
 
-Open **Edit → Keyboard Shortcuts**, search for **CRT Retro Filter**, and assign a shortcut to the **Randomize** command (e.g., `Ctrl+Shift+R`). All script command shortcuts live in **Edit → Keyboard Shortcuts**.
+Open **Edit → Keyboard Shortcuts**, search for **CRT Retro Filter**, and assign shortcuts to the **Open Dialog / Quick Apply / Randomize** commands (e.g. `Ctrl+Shift+R` for Randomize, `Ctrl+Shift+Q` for Quick Apply). No defaults are preset; bindings are stored per command ID and keep working regardless of menu layout.
 
 ### Where are my custom presets stored?
 

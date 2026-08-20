@@ -23,11 +23,25 @@ function init(plugin)
   -- Randomize clicks never produce identical results.
   MathUtils.seedRandom()
 
-  -- Register the main command: apply CRT filters
+  -- Menu organization: group all commands under a "CRT Retro Filter"
+  -- submenu when the API supports it; fall back to the flat Edit menu
+  -- on older Aseprite versions. Command ids stay stable, so user-bound
+  -- keyboard shortcuts keep working regardless of menu layout.
+  local menuGroup = "edit_fx"
+  if plugin.newMenuGroup then
+    plugin:newMenuGroup{
+      id = "CRT_Retro_Filter_Menu",
+      title = "CRT Retro Filter",
+      group = "edit_fx"
+    }
+    menuGroup = "CRT_Retro_Filter_Menu"
+  end
+
+  -- Register the main command: open the filter dialog
   plugin:newCommand{
     id = "CRT_Retro_Filter",
-    title = "CRT Retro Filter",
-    group = "edit_fx",
+    title = "Open Dialog...",
+    group = menuGroup,
     onenabled = function()
       return app.activeCel ~= nil
     end,
@@ -36,11 +50,17 @@ function init(plugin)
     end
   }
 
-  -- Register a quick-apply command: re-apply with last saved settings
+  -- Separate the main entry from the quick actions
+  if plugin.newMenuSeparator then
+    plugin:newMenuSeparator{ group = menuGroup }
+  end
+
+  -- Register a quick-apply command: re-apply with last saved settings.
+  -- No default shortcut is assigned; bind one in Edit → Keyboard Shortcuts.
   plugin:newCommand{
     id = "CRT_Retro_Filter_QuickApply",
-    title = "CRT Retro Filter (Quick Apply)",
-    group = "edit_fx",
+    title = "Quick Apply",
+    group = menuGroup,
     onenabled = function()
       return app.activeCel ~= nil
     end,
@@ -62,11 +82,12 @@ function init(plugin)
     end
   }
 
-  -- Register a randomize command for keyboard shortcut binding
+  -- Register a randomize command. No default shortcut is assigned;
+  -- bind e.g. Ctrl+Shift+R in Edit → Keyboard Shortcuts.
   plugin:newCommand{
     id = "CRT_Retro_Filter_Randomize",
-    title = "CRT Retro Filter (Randomize)",
-    group = "edit_fx",
+    title = "Randomize",
+    group = menuGroup,
     onenabled = function()
       return app.activeCel ~= nil
     end,
@@ -79,8 +100,9 @@ function init(plugin)
       end
 
       local params = DialogUI.generateRandomParams()
+      local prefs = plugin.preferences
       -- keep the user's global strength dial when randomizing from the menu
-      local savedParams = plugin.preferences.params
+      local savedParams = prefs.params
       params.global_strength = (savedParams and savedParams.global_strength) or 100
 
       app.transaction("CRT Randomize", function()
