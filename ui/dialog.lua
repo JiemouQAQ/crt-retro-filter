@@ -30,7 +30,7 @@ local ColorUtils = require("utils.color")
 local DialogUI = {}
 
 -- Displayed in the dialog title; keep in sync with package.json
-local PLUGIN_VERSION = "3.11.2"
+local PLUGIN_VERSION = "3.12.0"
 
 -- ============================================================
 -- Preview state
@@ -733,7 +733,36 @@ function DialogUI.show(plugin)
       updatePreview()
     end
   }
-  dlg:check{ id = "all_frames", label = T.all_frames, selected = prefs.all_frames or false }
+
+  -- Apply range: current frame / all frames / custom range
+  local totalFrames = app.activeSprite and #app.activeSprite.frames or 1
+  local prefsRange = prefs.apply_range
+  if not prefsRange then
+    prefsRange = prefs.all_frames and "all" or "current"
+  end
+  local rangeStart = math.max(1, math.min(prefs.range_start or 1, totalFrames))
+  local rangeEnd = math.max(rangeStart, math.min(prefs.range_end or totalFrames, totalFrames))
+
+  local function updateRangeVisibility()
+    local custom = dlg.data.range_mode == T.range_custom
+    pcall(function() dlg:modify{ id = "range_start", visible = custom } end)
+    pcall(function() dlg:modify{ id = "range_end", visible = custom } end)
+  end
+
+  dlg:combobox{
+    id = "range_mode",
+    label = T.apply_range,
+    option = (prefsRange == "all") and T.range_all
+      or (prefsRange == "custom") and T.range_custom or T.range_current,
+    options = { T.range_current, T.range_all, T.range_custom },
+    hexpand = true,
+    onchange = function() updateRangeVisibility() end
+  }
+  dlg:number{ id = "range_start", label = T.range_start, min = 1, max = totalFrames,
+    value = rangeStart, hexpand = true, visible = (prefsRange == "custom") }
+  dlg:number{ id = "range_end", label = T.range_end, min = 1, max = totalFrames,
+    value = rangeEnd, hexpand = true, visible = (prefsRange == "custom") }
+
   dlg:check{ id = "anim_enabled", label = T.anim_evolution, selected = prefs.anim_enabled or false }
 
   -- Disable All / Reset Default on one row
@@ -1149,10 +1178,26 @@ function DialogUI.show(plugin)
     prefs.params = params
     prefs.dup_layer = data.dup_layer
     prefs.sel_only = data.sel_only
-    prefs.all_frames = data.all_frames
+
+    -- Apply range: current / all / custom [start, end]
+    local mode = (data.range_mode == T.range_all) and "all"
+      or (data.range_mode == T.range_custom) and "custom" or "current"
+    prefs.apply_range = mode
+    prefs.all_frames = (mode == "all") -- keep legacy flag in sync
+    local total = app.activeSprite and #app.activeSprite.frames or 1
+    local s = math.max(1, math.min(data.range_start or 1, total))
+    local e = math.max(s, math.min(data.range_end or total, total))
+    prefs.range_start = s
+    prefs.range_end = e
+    local frameSpec = nil
+    if mode == "all" then
+      frameSpec = "all"
+    elseif mode == "custom" then
+      frameSpec = { start = s, endFrame = e }
+    end
 
     local sprite = app.activeSprite
-    DialogUI.applyToActiveLayer(sprite, params, T, data.dup_layer, data.sel_only, data.all_frames)
+    DialogUI.applyToActiveLayer(sprite, params, T, data.dup_layer, data.sel_only, frameSpec)
   end
 
   originalPreview = nil
@@ -1212,7 +1257,8 @@ end
 -- ops = pixels x frames x (enabled filters + mask/blend passes)
 function DialogUI.estimateOps(sprite, params, frameCount, allFrames, selectionOnly)
   local pixels = sprite.width * sprite.height
-  local frames = allFrames and frameCount or 1
+  local pixels = sprite.width * sprite.height
+  local frames = frameCount or 1
   local enabled = DialogUI.countEnabledFilters(params)
   local passes = enabled
   local strength = params.global_strength
@@ -1227,9 +1273,52 @@ function DialogUI.estimateOps(sprite, params, frameCount, allFrames, selectionOn
 end
 
 -- ============================================================
+-- Build the list of frame numbers to process.
+-- frameSpec:
+--   nil / false     -> the active frame only
+--   "all" or true   -> every frame of the sprite
+--   { start=, endFrame= } -> a custom range, clamped to [1, total]
+-- The clamping rules guarantee the range is always valid:
+--   start in [1, total], end in [start, total] (start <= end).
+-- ============================================================
+function DialogUI.buildFrameList(sprite, frameSpec, activeFrame)
+  local total = #sprite.frames
+  local list = {}
+  if frameSpec == true or frameSpec == "all" then
+    for f = 1, total do
+      list[#list + 1] = f
+    end
+  elseif type(frameSpec) == "table" then
+    local s = math.max(1, math.min(frameSpec.start or activeFrame or 1, total))
+    local e = math.max(s, math.min(frameSpec.endFrame or s, total))
+    for f = s, e do
+      list[#list + 1] = f
+    end
+  else
+    list[1] = activeFrame or 1
+  end
+  return list
+end
+
+-- Derive the frame spec from saved preferences (honors the legacy
+-- all_frames flag for backward compatibility).
+function DialogUI.frameSpecFromPrefs(prefs)
+  local mode = prefs.apply_range
+  if not mode then
+    mode = prefs.all_frames and "all" or "current"
+  end
+  if mode == "all" then
+    return "all"
+  elseif mode == "custom" then
+    return { start = prefs.range_start, endFrame = prefs.range_end }
+  end
+  return nil
+end
+
+-- ============================================================
 -- Apply filter to the active layer only
 -- ============================================================
-function DialogUI.applyToActiveLayer(sprite, params, T, duplicate, selectionOnly, allFrames)
+function DialogUI.applyToActiveLayer(sprite, params, T, duplicate, selectionOnly, frameSpec)
   if not sprite then return end
 
   local layer = app.activeLayer
@@ -1270,21 +1359,12 @@ function DialogUI.applyToActiveLayer(sprite, params, T, duplicate, selectionOnly
     end
   end
 
-  -- Frame list: every frame of the layer, or just the active one
-  local frameList = {}
-  if allFrames then
-    for f = 1, #sprite.frames do
-      frameList[#frameList + 1] = f
-    end
-  else
-    frameList[1] = cel.frame.frameNumber
-  end
+  -- Frame list: active frame / all frames / custom range (clamped)
+  local frameList = DialogUI.buildFrameList(sprite, frameSpec, cel.frame.frameNumber)
 
   -- Cost guard: refuse tasks this machine would choke on (instead of
-  -- Cost guard: refuse tasks this machine would choke on (instead of
   -- freezing the UI or risking a crash).
-  local totalFrames = #sprite.frames
-  local estimate = DialogUI.estimateOps(sprite, params, totalFrames, allFrames, selectionOnly)
+  local estimate = DialogUI.estimateOps(sprite, params, #frameList, selectionOnly)
   if estimate > DialogUI.MAX_PIXEL_OPS then
     app.alert(T.task_too_heavy)
     return
@@ -1296,6 +1376,7 @@ function DialogUI.applyToActiveLayer(sprite, params, T, duplicate, selectionOnly
       -- total frame count, and previous frame output to the filter chain
       -- (mechanism A/B/C animation support). Cleared afterwards so saved
       -- params are never polluted.
+      local totalFrames = #sprite.frames
       if duplicate then
         local newLayer = sprite:newLayer()
         newLayer.name = layer.name .. " CRT"

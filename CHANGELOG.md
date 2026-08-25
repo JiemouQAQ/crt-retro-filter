@@ -5,6 +5,11 @@ All notable changes to the CRT Retro Filter extension.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [3.12.0] - 2026-02
+
+### Added
+- **Custom frame range**: the "Apply to All Frames" checkbox became an **Apply Range** dropdown (Current Frame / All Frames / Custom Range). Custom Range adds Start/End frame inputs with automatic clamping to `1..total frames` and `start <= end` (out-of-range input is corrected). Legacy `all_frames` preference is honored for backward compatibility.
+
 ## [3.11.2] - 2026-02
 
 ### Changed

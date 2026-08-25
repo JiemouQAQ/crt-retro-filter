@@ -264,7 +264,7 @@ The dialog is organized into seven tabs:
 
 | Tab | Contents |
 |-----|----------|
-| **Presets** | Preset selection, preset strength, language switch, duplicate layer option, selection-only option, apply-to-all-frames option, per-frame evolution option, custom preset management, Randomize button |
+| **Presets** | Preset selection, preset strength, language switch, duplicate layer option, selection-only option, apply range (current / all / custom), per-frame evolution option, custom preset management, Randomize button |
 | **Screen** | Scanlines, Screen Curvature, Chromatic Aberration |
 | **Display** | Bloom / Glow, Vignette, Noise / Static |
 | **Pixel** | Color Temperature, Pixelation, RGB Phosphor Mask |
@@ -303,9 +303,15 @@ Check **"Selection Only"** in the Presets tab to apply filters only to the pixel
 
 If no selection is active when checked, an alert is shown when you click **Apply**.
 
-### Apply to All Frames
+### Apply Range
 
-Check **"Apply to All Frames"** to run the filter chain on **every frame** of the active layer (for animations), all grouped into a **single** undo step.
+The **"Apply Range"** dropdown in the Presets tab decides which frames get processed:
+
+- **Current Frame** — only the active frame (default)
+- **All Frames** — every frame of the active layer, grouped into a **single** undo step
+- **Custom Range** — only frames between **Start Frame** and **End Frame** (e.g. frames 3–8)
+
+The range is automatically **clamped**: start/end are limited to `1 .. total frames`, and start can never exceed end (out-of-range input is corrected automatically).
 
 **Making animation**: also check **"Per-Frame Evolution"** for the full "living CRT" mode (everything deterministic — rerunning the animation reproduces it exactly):
 
